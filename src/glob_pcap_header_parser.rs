@@ -19,7 +19,7 @@ pub struct GlobalPcapHeader {
 }
 
 impl GlobalPcapHeader {
-    pub(crate) fn new(parser: &mut Parser) -> Result<GlobalPcapHeader, CustomErrors> {
+    pub fn parse(parser: &mut Parser) -> Result<GlobalPcapHeader, CustomErrors> {
         let magic_number = parser.next::<u32>();
         let endian = match magic_number {
             BIG_ENDIAN_MILLISECONDS | BIG_ENDIAN_NANOSECONDS => Endian::Big,

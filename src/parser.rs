@@ -62,6 +62,26 @@ impl Parser {
         self.parsed_bytes = self.buffered_reader.read(&mut self.buffer[left .. BUFFER_MAX_SIZE])? + left;
         Ok(())
     }
+
+    pub fn next_mac(&mut self) -> [u8; 6] {
+        let mut mac: [u8; 6] = [0, 0, 0, 0, 0, 0];
+        for i in 0..6 {
+            mac[i] = self.next::<u8>();
+        }
+        mac
+    }
+
+    pub fn next_ip_v4(&mut self) -> [u8; 4] {
+        let mut mac: [u8; 4] = [0, 0, 0, 0];
+        for i in 0..4 {
+            mac[i] = self.next::<u8>();
+        }
+        mac
+    }
+
+    fn skip(&mut self) {
+        todo!();
+    }
 }
 
 pub trait FromBytes: Sized {

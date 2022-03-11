@@ -43,7 +43,12 @@ mod tests {
     fn parse_global_pcap_header() {
         let path = "sample.pcap";
         let mut parser = Parser::new(path).unwrap();
-        let gpcap = GlobalPcapHeader::new(&mut parser).unwrap();
+        let gpcap = GlobalPcapHeader::parse(&mut parser).unwrap();
         println!("{:?}", gpcap);
+    }
+
+    #[test]
+    fn parse() {
+        crate::parse();
     }
 }
