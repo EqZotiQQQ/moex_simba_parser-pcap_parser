@@ -12,9 +12,12 @@ mod errors;
 mod record_header_parser;
 mod ip_header;
 mod udp_header;
+mod snapshot_packet;
 mod market_data_packet_header;
 mod market_data_packet;
-mod moex_packets;
+mod incremental_packet;
+mod sbe_message;
+mod packet_base;
 
 fn parse() {
     let path = "sample.pcap";
@@ -26,15 +29,21 @@ fn parse() {
         let record_header = RecordHeader::parse(&mut parser);
         println!("{}", record_header);
 
+        let mut len = record_header.get_packet_len();
+
         let ip_header = IpHeader::parse(&mut parser);
         println!("{}", ip_header);
+
+        len -= 16; // ip header size
 
         let udp_header = UdpHeader::parse(&mut parser);
         println!("{}", udp_header);
 
+        len -= 26; // udp header size
         // MOEX SIMBA PART
 
-        let market_data_packet = MarketDataPacket::parse(&mut parser);
+
+        let market_data_packet = MarketDataPacket::parse(&mut parser, len);
         println!("{}", market_data_packet);
 
         break;

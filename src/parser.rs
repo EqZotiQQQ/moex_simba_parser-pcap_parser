@@ -3,7 +3,7 @@ use std::fs::File;
 use std::io::{BufReader, Read};
 use std::path::Path;
 
-#[derive(Debug, Eq, PartialEq)]
+#[derive(Debug, Eq, PartialEq, Copy, Clone)]
 pub enum Endian {
     Big,
     Little,
@@ -35,8 +35,23 @@ impl Parser {
         self.endian = endian;
     }
 
+    pub fn next_le<T>(&mut self) -> T
+    where T: FromBytes {
+        self.next_helper::<T>(Endian::Little)
+    }
+
+    pub fn next_be<T>(&mut self) -> T
+    where T: FromBytes {
+        self.next_helper::<T>(Endian::Big)
+    }
+
     pub fn next<T>(&mut self) -> T
     where T: FromBytes {
+        self.next_helper::<T>(self.endian.clone())
+    }
+
+    fn next_helper<T>(&mut self, endian: Endian) -> T
+        where T: FromBytes {
         let type_size = mem::size_of::<T>();
         if type_size > self.parsed_bytes - self.buffer_pos {
             self.fill_buffer();

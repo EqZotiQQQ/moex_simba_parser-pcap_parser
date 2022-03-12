@@ -20,7 +20,7 @@ pub struct GlobalPcapHeader {
 
 impl GlobalPcapHeader {
     pub fn parse(parser: &mut Parser) -> Result<GlobalPcapHeader, CustomErrors> {
-        let magic_number = parser.next::<u32>();
+        let magic_number = parser.next_be::<u32>();
         let endian = match magic_number {
             BIG_ENDIAN_MILLISECONDS | BIG_ENDIAN_NANOSECONDS => Endian::Big,
             LITTLE_ENDIAN_MILLISECONDS | LITTLE_ENDIAN_NANOSECONDS => Endian::Little,
@@ -29,7 +29,7 @@ impl GlobalPcapHeader {
         parser.set_endian(endian);
 
         Ok(GlobalPcapHeader {
-            magic_number: magic_number,
+            magic_number,
             version_major: parser.next::<u16>(),
             version_minor: parser.next::<u16>(),
             time_zone: parser.next::<i32>(),
@@ -42,6 +42,7 @@ impl GlobalPcapHeader {
 
 impl Display for GlobalPcapHeader {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        writeln!(f, "== Global pcap header: ==");
         write!(f, "Magic number: {}\n", self.magic_number);
         write!(f, "Major version: {}\n", self.version_major);
         write!(f, "Minor version: {}\n", self.version_minor);

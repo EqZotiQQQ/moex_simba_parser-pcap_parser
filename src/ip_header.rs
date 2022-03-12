@@ -2,6 +2,7 @@ use std::fmt::{Display, Formatter};
 use mac_address::MacAddress;
 use crate::Parser;
 
+const IP_HEADER: u16 = 14;
 
 pub struct IpHeader {
     destination_mac: MacAddress,
@@ -21,12 +22,12 @@ impl IpHeader {
         IpHeader {
             destination_mac: MacAddress::from(parser.next_mac()),
             source_mac: MacAddress::from(parser.next_mac()),
-            protocol_version: parser.next::<u16>(),
+            protocol_version: parser.next_be::<u16>(),
             strange_field: parser.next::<u8>(),
             differentiated_services_field: parser.next::<u8>(),
-            total_length: parser.next::<u16>(),
-            identification: parser.next::<u16>(),
-            flags_and_fragment_offset: parser.next::<u16>(),
+            total_length: parser.next_be::<u16>(),
+            identification: parser.next_be::<u16>(),
+            flags_and_fragment_offset: parser.next_be::<u16>(),
             ttl: parser.next::<u8>(),
             udp_protocol: parser.next::<u8>(),
         }
@@ -35,6 +36,7 @@ impl IpHeader {
 
 impl Display for IpHeader {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        writeln!(f, "== IP header: ==");
         write!(f, "Destination mac: {}\n", self.destination_mac);
         write!(f, "Source mac: {}\n", self.source_mac);
         write!(f, "Protocol version: {}\n", self.protocol_version);
