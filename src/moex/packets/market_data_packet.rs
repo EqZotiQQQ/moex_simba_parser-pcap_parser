@@ -1,9 +1,8 @@
 use std::fmt::{Display, Formatter};
-use crate::incremental_packet::IncrementalPacket;
-use crate::market_data_packet_header::MarketDataPacketHeader;
-// use crate::packet_base::Packet;
+use crate::moex::packets::incremental_packet::IncrementalPacket;
+use crate::moex::packets::market_data_packet_header::MarketDataPacketHeader;
+use crate::moex::packets::snapshot_packet::SnapshotPacket;
 use crate::Parser;
-use crate::snapshot_packet::SnapshotPacket;
 
 #[derive(Debug, Clone)]
 enum PacketType {
@@ -24,13 +23,14 @@ impl MarketDataPacket {
 
         length -= 16; // length of market data packet header
 
+        println!("######## Header:\n{}", header);
 
         let packet = match header.is_incremental() {
             true => PacketType::IncrementalPacket(IncrementalPacket::parse(parser, length)),
             false => PacketType::SnapshotPacket(SnapshotPacket::parse(parser, length).unwrap()),
         };
 
-
+        println!("######## Packet:\n{}", packet);
         MarketDataPacket {
             packet_length: parser.next::<u64>(),
             market_data_packet_header: header,

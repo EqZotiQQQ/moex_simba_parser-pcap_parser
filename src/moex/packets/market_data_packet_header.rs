@@ -35,8 +35,26 @@ impl Display for MarketDataPacketHeader {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         writeln!(f, "== Market data packet header: ==");
         write!(f, "Message sequential number: {}\n", self.msg_seq_number);
+
         write!(f, "Message size: {}\n", self.msg_size);
+
         write!(f, "Message flags: {}\n", self.msg_flags);
+        if (self.msg_flags & MESSAGE_FRAGMENTATION) == MESSAGE_FRAGMENTATION {
+            write!(f, "* Message fragmentation\n");
+        }
+        if (self.msg_flags & FIRST_MESSAGE) == FIRST_MESSAGE {
+            write!(f, "* First message\n");
+        }
+        if (self.msg_flags & LAST_MESSAGE) == LAST_MESSAGE {
+            write!(f, "* Last message\n");
+        }
+        if (self.msg_flags & INCREMENTAL_MESSAGE) == INCREMENTAL_MESSAGE {
+            write!(f, "* Incremental packet\n");
+        }
+        if (self.msg_flags & POS_DUP_FLAG) == POS_DUP_FLAG {
+            write!(f, "* Pos dup flag\n");
+        }
         writeln!(f, "Sending time: {}", self.sending_time)
     }
 }
+

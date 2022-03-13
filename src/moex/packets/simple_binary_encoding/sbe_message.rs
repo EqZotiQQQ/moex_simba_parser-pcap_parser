@@ -1,9 +1,10 @@
+use std::borrow::Borrow;
 use std::fmt::{Display, Formatter};
 use crate::errors::CustomErrors;
-use crate::order_best_prices::OrderBestPrices;
-use crate::order_book_snapshot::OrderBookSnapshot;
-use crate::order_execution::OrderExecution;
-use crate::order_update::OrderUpdate;
+use crate::moex::orders::order_best_prices::OrderBestPrices;
+use crate::moex::orders::order_book_snapshot::OrderBookSnapshot;
+use crate::moex::orders::order_execution::OrderExecution;
+use crate::moex::orders::order_update::OrderUpdate;
 use crate::Parser;
 
 #[derive(Debug, Clone)]
@@ -40,6 +41,8 @@ impl Display for MessageType {
 }
 
 impl SBEHeader {
+    pub const SIZE: u16 = 8;
+
     pub fn parse(parser: &mut Parser) -> Result<SBEHeader, CustomErrors> {
         Ok(SBEHeader {
             block_length: parser.next::<u16>(),
@@ -102,29 +105,21 @@ pub struct SBEMessage {
 impl SBEMessage {
     pub fn parse(parser: &mut Parser) -> Result<SBEMessage, CustomErrors> {
         let header = SBEHeader::parse(parser).unwrap();
-        let order: Option<OrderType> = match header.get_template_id() {
-            MessageType::Heartbeat => None,
-            MessageType::SequenceReset => None,
+        let mut parsed: u32 = SBEHeader::SIZE as u32;
+        let mut order = match header.get_template_id() {
             MessageType::OrderBestPrices => Some(OrderType::OrderBestPrices(OrderBestPrices::parse(parser))),
-            MessageType::EmptyBook => None,
             MessageType::OrderUpdate => Some(OrderType::OrderUpdate(OrderUpdate::parse(parser))),
             MessageType::OrderExecution => Some(OrderType::OrderExecution(OrderExecution::parse(parser))),
             MessageType::OrderBookSnapshot => Some(OrderType::OrderBookSnapshot(OrderBookSnapshot::parse(parser))),
-            MessageType::SecurityDefinition => None,
-            MessageType::SecurityStatus => None,
-            MessageType::SecurityDefinitionUpdateReport => None,
-            MessageType::TradingSessionStatus => None,
-            MessageType::Logon => None,
-            MessageType::Logout => None,
-            MessageType::MarketDataRequest => None,
             _ => {
                 parser.skip(header.get_block_length() as usize);
+                parsed += header.get_block_length() as u32;
                 None
             }
         };
         if order.is_some() {
             Ok(SBEMessage {
-                header: header,
+                header,
                 order,
                 parsed: 0,
             })

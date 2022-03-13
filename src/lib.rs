@@ -1,9 +1,11 @@
 use crate::glob_pcap_header_parser::GlobalPcapHeader;
-use crate::ip_header::IpHeader;
-use crate::market_data_packet::MarketDataPacket;
-use crate::parser::Parser;
 use crate::record_header_parser::RecordHeader;
+use crate::ip_header::IpHeader;
 use crate::udp_header::UdpHeader;
+use crate::parser::Parser;
+use crate::moex::packets::market_data_packet::MarketDataPacket;
+
+// #[path = "moex/incremental_packet.rs"] mod incremental_packet;
 
 mod glob_pcap_header_parser;
 mod parser;
@@ -12,15 +14,7 @@ mod errors;
 mod record_header_parser;
 mod ip_header;
 mod udp_header;
-mod snapshot_packet;
-mod market_data_packet_header;
-mod market_data_packet;
-mod incremental_packet;
-mod sbe_message;
-mod order_update;
-mod order_best_prices;
-mod order_book_snapshot;
-mod order_execution;
+mod moex;
 
 fn parse() {
     let path = "sample.pcap";
