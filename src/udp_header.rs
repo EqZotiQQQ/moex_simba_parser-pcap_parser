@@ -1,6 +1,5 @@
 use std::fmt::{Display, Formatter};
 use std::net::Ipv4Addr;
-use mac_address::MacAddress;
 use crate::Parser;
 
 const UDP_HEADER_LENGTH: u16 = 26;
@@ -29,6 +28,7 @@ impl UdpHeader {
     }
 }
 
+#[allow(unused_must_use)]
 impl Display for UdpHeader {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         writeln!(f, "== UDP header: ==");
@@ -37,6 +37,7 @@ impl Display for UdpHeader {
         write!(f, "Destination ip: {}\n", self.dest_ip);
         write!(f, "Source port: {}\n", self.source_port);
         write!(f, "Destination port: {}\n", self.destination_port);
-        writeln!(f, "Length: {}", self.length)
+        write!(f, "Length: {}\n", self.length);
+        writeln!(f, "Check sum UDP: {}", self.check_sum_udp)
     }
 }

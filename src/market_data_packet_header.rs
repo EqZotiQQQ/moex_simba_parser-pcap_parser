@@ -30,6 +30,7 @@ impl MarketDataPacketHeader {
     }
 }
 
+#[allow(unused_must_use)]
 impl Display for MarketDataPacketHeader {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         writeln!(f, "== Market data packet header: ==");

@@ -40,6 +40,7 @@ impl GlobalPcapHeader {
     }
 }
 
+#[allow(unused_must_use)]
 impl Display for GlobalPcapHeader {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         writeln!(f, "== Global pcap header: ==");
@@ -48,6 +49,7 @@ impl Display for GlobalPcapHeader {
         write!(f, "Minor version: {}\n", self.version_minor);
         write!(f, "Time zone: {}\n", self.time_zone);
         write!(f, "Sig figs: {}\n", self.sig_figs);
+        write!(f, "Snap len: {}\n", self.snap_len);
         writeln!(f, "Network: {}", self.network)
     }
 }

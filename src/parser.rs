@@ -1,6 +1,6 @@
 use std::mem;
 use std::fs::File;
-use std::io::{BufReader, Read};
+use std::io::{BufReader, Read, Seek, SeekFrom};
 use std::path::Path;
 
 #[derive(Debug, Eq, PartialEq, Copy, Clone)]
@@ -54,12 +54,12 @@ impl Parser {
         where T: FromBytes {
         let type_size = mem::size_of::<T>();
         if type_size > self.parsed_bytes - self.buffer_pos {
-            self.fill_buffer();
+            self.fill_buffer();     // TODO: process later
             self.buffer_pos = 0;
         }
 
         let bytes = &mut self.buffer[self.buffer_pos .. self.buffer_pos + type_size];
-        if self.endian == Endian::Big {
+        if endian == Endian::Big {
             bytes.reverse();
         }
         let value: T = T::from_ne_bytes(bytes).unwrap();
@@ -94,8 +94,25 @@ impl Parser {
         mac
     }
 
-    fn skip(&mut self) {
-        todo!();
+    pub fn get_file_pos(&mut self) -> u64 {
+        self.buffered_reader.seek(SeekFrom::Current(0)).unwrap()
+    }
+
+
+    pub fn skip(&mut self, n: usize) -> Result<(), std::io::Error>{
+        if n == 0 {
+            return Ok(())
+        } else {
+            if BUFFER_MAX_SIZE > self.buffer_pos + n {
+                self.buffer_pos += n;
+            } else {
+                let left_in_buf = BUFFER_MAX_SIZE - self.buffer_pos;
+                self.buffered_reader.seek_relative((n - left_in_buf) as i64);
+                self.parsed_bytes = self.buffered_reader.read(&mut self.buffer)?;
+                self.buffer_pos = 0;
+            }
+        }
+        Ok(())
     }
 }
 
@@ -136,5 +153,11 @@ impl FromBytes for i32 {
 impl FromBytes for u64 {
     fn from_ne_bytes(bytes: &[u8]) -> Option<Self> {
         bytes.try_into().map(u64::from_ne_bytes).ok()
+    }
+}
+
+impl FromBytes for i64 {
+    fn from_ne_bytes(bytes: &[u8]) -> Option<Self> {
+        bytes.try_into().map(i64::from_ne_bytes).ok()
     }
 }

@@ -17,7 +17,10 @@ mod market_data_packet_header;
 mod market_data_packet;
 mod incremental_packet;
 mod sbe_message;
-mod packet_base;
+mod order_update;
+mod order_best_prices;
+mod order_book_snapshot;
+mod order_execution;
 
 fn parse() {
     let path = "sample.pcap";
@@ -29,7 +32,7 @@ fn parse() {
         let record_header = RecordHeader::parse(&mut parser);
         println!("{}", record_header);
 
-        let mut len = record_header.get_packet_len();
+        let mut len = record_header.get_packet_len() as u64;
 
         let ip_header = IpHeader::parse(&mut parser);
         println!("{}", ip_header);

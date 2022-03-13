@@ -34,6 +34,7 @@ impl IpHeader {
     }
 }
 
+#[allow(unused_must_use)]
 impl Display for IpHeader {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         writeln!(f, "== IP header: ==");

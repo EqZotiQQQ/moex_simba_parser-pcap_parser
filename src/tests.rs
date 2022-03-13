@@ -40,12 +40,22 @@ mod tests {
     }
 
     #[test]
+    fn skip() {
+        let path = "sample.pcap";
+        let mut parser = Parser::new(path).unwrap();
+        assert_eq!(parser.get_file_pos(), 0);
+        parser.skip(4000);
+        assert_eq!(parser.get_file_pos(), 4000);
+    }
+
+    #[test]
     fn parse_global_pcap_header() {
         let path = "sample.pcap";
         let mut parser = Parser::new(path).unwrap();
         let gpcap = GlobalPcapHeader::parse(&mut parser).unwrap();
         println!("{:?}", gpcap);
     }
+
 
     #[test]
     fn parse() {

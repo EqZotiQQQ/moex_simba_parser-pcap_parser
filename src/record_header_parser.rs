@@ -1,5 +1,5 @@
 use std::fmt::{Display, Formatter};
-use crate::{GlobalPcapHeader, Parser};
+use crate::Parser;
 
 #[derive(Debug, Copy, Clone)]
 pub struct RecordHeader {
@@ -24,6 +24,7 @@ impl RecordHeader {
     }
 }
 
+#[allow(unused_must_use)]
 impl Display for RecordHeader {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         writeln!(f, "== Record header: ==");
