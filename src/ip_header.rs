@@ -2,7 +2,6 @@ use std::fmt::{Display, Formatter};
 use mac_address::MacAddress;
 use crate::Parser;
 
-const IP_HEADER: u16 = 14;
 
 pub struct IpHeader {
     destination_mac: MacAddress,
@@ -18,6 +17,8 @@ pub struct IpHeader {
 }
 
 impl IpHeader {
+
+    const SIZE: u8 = 14;
     pub fn parse(parser: &mut Parser) -> IpHeader {
         IpHeader {
             destination_mac: MacAddress::from(parser.next_mac()),

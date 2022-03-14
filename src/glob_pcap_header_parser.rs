@@ -1,11 +1,7 @@
 use std::fmt::{Display, Formatter};
 use crate::errors::CustomErrors;
+use crate::errors::CustomErrors::BadMagicNumberError;
 use crate::parser::{Endian, Parser};
-
-const BIG_ENDIAN_MILLISECONDS: u32 = 0xA1B2C3D4;
-const BIG_ENDIAN_NANOSECONDS: u32 = 0xA1B23C4D;
-const LITTLE_ENDIAN_MILLISECONDS: u32 = 0xD4C3B2A1;
-const LITTLE_ENDIAN_NANOSECONDS: u32 = 0x4D3CB2A1;
 
 #[derive(Debug)]
 pub struct GlobalPcapHeader {
@@ -21,11 +17,7 @@ pub struct GlobalPcapHeader {
 impl GlobalPcapHeader {
     pub fn parse(parser: &mut Parser) -> Result<GlobalPcapHeader, CustomErrors> {
         let magic_number = parser.next_be::<u32>();
-        let endian = match magic_number {
-            BIG_ENDIAN_MILLISECONDS | BIG_ENDIAN_NANOSECONDS => Endian::Big,
-            LITTLE_ENDIAN_MILLISECONDS | LITTLE_ENDIAN_NANOSECONDS => Endian::Little,
-            _ => return Err(CustomErrors::BadMagicNumberError)
-        };
+        let endian = Endian::get_ordering(magic_number).unwrap();
         parser.set_endian(endian);
 
         Ok(GlobalPcapHeader {

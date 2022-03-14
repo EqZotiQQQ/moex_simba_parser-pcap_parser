@@ -2,11 +2,23 @@ use std::mem;
 use std::fs::File;
 use std::io::{BufReader, Read, Seek, SeekFrom};
 use std::path::Path;
+use crate::errors::CustomErrors;
+use crate::errors::CustomErrors::BadMagicNumberError;
 
 #[derive(Debug, Eq, PartialEq, Copy, Clone)]
 pub enum Endian {
     Big,
     Little,
+}
+
+impl Endian {
+    pub fn get_ordering(magic: u32) -> Result<Endian, CustomErrors> {
+        Ok(match magic {
+            0xA1B2C3D4 | 0xA1B23C4D => Endian::Big,
+            0xD4C3B2A1 | 0x4D3CB2A1 => Endian::Little,
+            _ => return Err(BadMagicNumberError)
+        })
+    }
 }
 
 const BUFFER_MAX_SIZE: usize = 2048;

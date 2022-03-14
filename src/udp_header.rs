@@ -2,7 +2,6 @@ use std::fmt::{Display, Formatter};
 use std::net::Ipv4Addr;
 use crate::Parser;
 
-const UDP_HEADER_LENGTH: u16 = 26;
 
 pub struct UdpHeader {
     check_sum: u16,
@@ -15,6 +14,7 @@ pub struct UdpHeader {
 }
 
 impl UdpHeader {
+    pub const SIZE: u16 = 26;
     pub fn parse(parser: &mut Parser) -> UdpHeader {
         UdpHeader {
             check_sum: parser.next_be::<u16>(),

@@ -9,6 +9,7 @@ pub struct BestPricesOrderPayload {
     security_id : i32,
 }
 
+#[allow(unused_must_use)]
 impl Display for BestPricesOrderPayload {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         writeln!(f, "mkt_bid_px: {}", self.mkt_bid_px);
@@ -25,12 +26,13 @@ pub struct OrderBestPrices {
     md_entries: Vec<BestPricesOrderPayload>,
 }
 
+#[allow(unused_must_use)]
 impl Display for OrderBestPrices {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         writeln!(f, "entry_size: {}", self.entry_size);
         writeln!(f, "no_md_entry: {}", self.no_md_entry);
         for (i, entries) in self.md_entries.iter().enumerate() {
-            writeln!(f, "{}", entries);
+            writeln!(f, "Best price no {}:\n {}", i, entries);
         }
         write!(f, "\n")
     }

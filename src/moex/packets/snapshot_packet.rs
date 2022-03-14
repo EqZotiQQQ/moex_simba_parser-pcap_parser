@@ -11,7 +11,7 @@ pub struct SnapshotPacket {
 }
 
 impl SnapshotPacket {
-    pub fn parse(parser: &mut Parser, mut length: u64) -> Result<SnapshotPacket, CustomErrors> {
+    pub fn parse(parser: &mut Parser, length: u64) -> Result<SnapshotPacket, CustomErrors> {
         Ok(SnapshotPacket {
             sbe_message: match SBEMessage::parse(parser) {
                 Ok(packet) => packet,
@@ -22,6 +22,7 @@ impl SnapshotPacket {
     }
 }
 
+#[allow(unused_must_use)]
 impl Display for SnapshotPacket {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         writeln!(f, "== Snapshot packet ==");

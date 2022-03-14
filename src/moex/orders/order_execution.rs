@@ -16,6 +16,7 @@ pub struct OrderExecution {
     md_entry_type: u8,
 }
 
+#[allow(unused_must_use)]
 impl Display for OrderExecution {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         writeln!(f, "md_entry_id: {}", self.md_entry_id);

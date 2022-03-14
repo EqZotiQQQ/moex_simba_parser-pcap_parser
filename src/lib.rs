@@ -16,7 +16,7 @@ mod ip_header;
 mod udp_header;
 mod moex;
 
-fn parse() {
+pub fn parse() {
     let path = "sample.pcap";
     let mut parser = Parser::new(&path).expect("Failed to open file");
     let global_pcap_header = GlobalPcapHeader::parse(&mut parser).expect("Failed to parse header");
@@ -43,6 +43,5 @@ fn parse() {
         let market_data_packet = MarketDataPacket::parse(&mut parser, len);
         println!("{}", market_data_packet);
 
-        break;
     }
 }

@@ -65,6 +65,7 @@ impl SBEHeader {
     }
 }
 
+#[allow(unused_must_use)]
 impl Display for MessageType {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match self {

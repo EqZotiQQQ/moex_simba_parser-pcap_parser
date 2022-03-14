@@ -1,4 +1,3 @@
-use std::borrow::Borrow;
 use std::fmt::{Display, Formatter};
 use crate::errors::CustomErrors;
 use crate::moex::orders::order_best_prices::OrderBestPrices;
@@ -8,13 +7,14 @@ use crate::moex::orders::order_update::OrderUpdate;
 use crate::moex::packets::simple_binary_encoding::sbe_header::{MessageType, SBEHeader};
 use crate::Parser;
 
+#[allow(dead_code)]
 #[derive(Debug, Clone)]
 enum OrderType {
     OrderUpdate(OrderUpdate),
     OrderExecution(OrderExecution),
     OrderBookSnapshot(OrderBookSnapshot),
     OrderBestPrices(OrderBestPrices),
-    Hearthbeat,
+    Heartbeat,
     SequenceReset,
     EmptyBook,
     SecurityDefinition,
@@ -67,7 +67,7 @@ impl SBEMessage {
             MessageType::OrderExecution => Some(OrderType::OrderExecution(OrderExecution::parse(parser))),
             MessageType::OrderBookSnapshot => Some(OrderType::OrderBookSnapshot(OrderBookSnapshot::parse(parser))),
             _ => {
-                parser.skip(header.get_block_length() as usize);
+                parser.skip(header.get_block_length() as usize); // TODO pass error
                 parsed += header.get_block_length() as u64;
                 None
             }

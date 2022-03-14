@@ -13,6 +13,7 @@ pub struct OrderUpdate  {
     md_entry_type: u8,
 }
 
+#[allow(unused_must_use)]
 impl Display for OrderUpdate {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         writeln!(f, "md_entry_id: {}", self.md_entry_id);
