@@ -1,4 +1,4 @@
-use std::fmt::{Display, Formatter};
+use std::fmt::{Debug, Display, Formatter};
 use crate::moex::packets::incremental_packet::IncrementalPacket;
 use crate::moex::packets::market_data_packet_header::MarketDataPacketHeader;
 use crate::moex::packets::snapshot_packet::SnapshotPacket;
@@ -31,6 +31,7 @@ impl MarketDataPacket {
         };
 
         println!("######## Packet:\n{}", packet);
+
         MarketDataPacket {
             packet_length: parser.next::<u64>(),
             market_data_packet_header: header,
@@ -43,7 +44,11 @@ impl MarketDataPacket {
 impl Display for PacketType {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         writeln!(f, "== Packet: ==");
-        writeln!(f, "\nPacket display:\n{}", self)
+        match self {
+            PacketType::IncrementalPacket(p) => writeln!(f, "Incremental packet:\n{}", p),//IncrementalPacket::fmt(f)),
+            PacketType::SnapshotPacket(p) => writeln!(f, "Snapshot packet:\n{}", p),
+        }
+        // writeln!(f, "\nPacket display:\n{}", self)
     }
 }
 

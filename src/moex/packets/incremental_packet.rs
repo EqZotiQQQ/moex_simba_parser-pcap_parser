@@ -53,12 +53,10 @@ impl IncrementalPacket {
         let header = IncrementalPacketHeader::parse(parser);
         size -= INCREMENTAL_PACKET_HEADER_SIZE as u64;
         let mut sbe_messages: Vec<SBEMessage> = vec![];
-        println!("Size = {}", size);
         while size > 0 {
             let mut sbe_message = SBEMessage::parse(parser).unwrap();
             size -= sbe_message.parsed();
             sbe_messages.push(sbe_message);
-            println!("Size = {}", size);
         }
         IncrementalPacket {
             header,

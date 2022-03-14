@@ -5,77 +5,8 @@ use crate::moex::orders::order_best_prices::OrderBestPrices;
 use crate::moex::orders::order_book_snapshot::OrderBookSnapshot;
 use crate::moex::orders::order_execution::OrderExecution;
 use crate::moex::orders::order_update::OrderUpdate;
+use crate::moex::packets::simple_binary_encoding::sbe_header::{MessageType, SBEHeader};
 use crate::Parser;
-
-#[derive(Debug, Clone)]
-pub struct SBEHeader {
-    block_length: u16,
-    template_id: MessageType,
-    schema_id: u16,
-    version: u16,
-}
-
-
-#[derive(Debug, Clone, Copy)]
-pub enum MessageType {
-    Heartbeat = 1,
-    SequenceReset = 2,
-    OrderBestPrices = 3,
-    EmptyBook = 4,
-    OrderUpdate = 5,
-    OrderExecution = 6,
-    OrderBookSnapshot = 7,
-    SecurityDefinition = 8,
-    SecurityStatus = 9,
-    SecurityDefinitionUpdateReport = 10,
-    TradingSessionStatus = 11,
-    Logon = 1000,
-    Logout = 1001,
-    MarketDataRequest = 1002,
-}
-
-impl Display for MessageType {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        todo!()
-    }
-}
-
-impl SBEHeader {
-    pub const SIZE: u16 = 8;
-
-    pub fn parse(parser: &mut Parser) -> Result<SBEHeader, CustomErrors> {
-        Ok(SBEHeader {
-            block_length: parser.next::<u16>(),
-            template_id: match parser.next::<u16>() {
-                1 => MessageType::Heartbeat,
-                2 => MessageType::SequenceReset,
-                3 => MessageType::OrderBestPrices,
-                4 => MessageType::EmptyBook,
-                5 => MessageType::OrderUpdate,
-                6 => MessageType::OrderExecution,
-                7 => MessageType::OrderBookSnapshot,
-                8 => MessageType::SecurityDefinition,
-                9 => MessageType::SecurityStatus,
-                10 => MessageType::SecurityDefinitionUpdateReport,
-                11 => MessageType::TradingSessionStatus,
-                1000 => MessageType::Logon,
-                1001 => MessageType::Logout,
-                1002 => MessageType::MarketDataRequest,
-                _ => return Err(CustomErrors::BadMessageTypeError)
-            },
-            schema_id: parser.next::<u16>(),
-            version: parser.next::<u16>(),
-        })
-    }
-
-    pub fn get_template_id(&self) -> MessageType {
-        self.template_id
-    }
-
-    pub fn get_block_length(&self) -> u16 {
-        self.block_length
-    }
-}
 
 #[derive(Debug, Clone)]
 enum OrderType {
@@ -95,6 +26,30 @@ enum OrderType {
     MarketDataRequest,
 }
 
+impl Display for OrderType {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        match self {
+            OrderType::OrderUpdate(order_update) => writeln!(f, "OrderUpdate: {}", order_update),
+            OrderType::OrderExecution(order_execution) => writeln!(f, "OrderExecution: {}", order_execution),
+            OrderType::OrderBookSnapshot(order_book_snapshot) => writeln!(f, "OrderBookSnapshot: {}", order_book_snapshot),
+            OrderType::OrderBestPrices(order_best_prices) => writeln!(f, "OrderBestPrices: {}", order_best_prices),
+            _ => {writeln!(f, "One of other orders")}
+        }
+    }
+}
+
+impl OrderType {
+    fn get(&self) -> u64 {
+        match self {
+            OrderType::OrderUpdate(_) => OrderUpdate::SIZE as u64,
+            OrderType::OrderExecution(_) => OrderExecution::SIZE as u64,
+            OrderType::OrderBookSnapshot(_) => OrderBookSnapshot::SIZE as u64,
+            OrderType::OrderBestPrices(_) => OrderBestPrices::SIZE as u64,
+            _ => { 69 }
+        }
+    }
+}
+
 #[derive(Debug, Clone)]
 pub struct SBEMessage {
     header: SBEHeader,
@@ -105,7 +60,7 @@ pub struct SBEMessage {
 impl SBEMessage {
     pub fn parse(parser: &mut Parser) -> Result<SBEMessage, CustomErrors> {
         let header = SBEHeader::parse(parser).unwrap();
-        let mut parsed: u32 = SBEHeader::SIZE as u32;
+        let mut parsed: u64 = SBEHeader::SIZE as u64;
         let mut order = match header.get_template_id() {
             MessageType::OrderBestPrices => Some(OrderType::OrderBestPrices(OrderBestPrices::parse(parser))),
             MessageType::OrderUpdate => Some(OrderType::OrderUpdate(OrderUpdate::parse(parser))),
@@ -113,15 +68,16 @@ impl SBEMessage {
             MessageType::OrderBookSnapshot => Some(OrderType::OrderBookSnapshot(OrderBookSnapshot::parse(parser))),
             _ => {
                 parser.skip(header.get_block_length() as usize);
-                parsed += header.get_block_length() as u32;
+                parsed += header.get_block_length() as u64;
                 None
             }
         };
         if order.is_some() {
+            parsed += order.as_ref().unwrap().get();
             Ok(SBEMessage {
                 header,
                 order,
-                parsed: 0,
+                parsed,
             })
         } else {
             Err(CustomErrors::BadMessageTypeError)
@@ -134,21 +90,11 @@ impl SBEMessage {
 }
 
 #[allow(unused_must_use)]
-impl Display for SBEHeader {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        writeln!(f, "== UDP header: ==");
-        write!(f, "Block length: {}\n", self.block_length);
-        write!(f, "Template id: {}\n", self.template_id);
-        write!(f, "Schema ID: {}\n", self.schema_id);
-        writeln!(f, "Version: {}", self.version)
-    }
-}
-
-#[allow(unused_must_use)]
 impl Display for SBEMessage {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         writeln!(f, "== SBE message: ==");
-        writeln!(f, "Version: {}", self.header)
+        writeln!(f, "Version: {}", self.header);
+        writeln!(f, "Order: {}", self.order.as_ref().unwrap())
     }
 }
 
