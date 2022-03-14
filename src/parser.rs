@@ -1,9 +1,11 @@
 use std::mem;
 use std::fs::File;
 use std::io::{BufReader, Read, Seek, SeekFrom};
+use std::io::SeekFrom::End;
 use std::path::Path;
 use crate::errors::CustomErrors;
 use crate::errors::CustomErrors::BadMagicNumberError;
+use crate::glob_pcap_header_parser::Ordering;
 
 #[derive(Debug, Eq, PartialEq, Copy, Clone)]
 pub enum Endian {
@@ -43,8 +45,11 @@ impl Parser {
         })
     }
 
-    pub fn set_endian(&mut self, endian: Endian) {
-        self.endian = endian;
+    pub fn set_endian(&mut self, endian: &Ordering) {
+        self.endian = match endian {
+            Ordering::BigEndianNanoseconds(_) | Ordering::BigEndianMilliseconds(_) => Endian::Big,
+            Ordering::LittleEndianNanoseconds(_) | Ordering::LittleEndMilliseconds(_) => Endian::Little,
+        }
     }
 
     pub fn next_le<T>(&mut self) -> T

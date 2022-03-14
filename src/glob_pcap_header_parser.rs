@@ -4,8 +4,47 @@ use crate::errors::CustomErrors::BadMagicNumberError;
 use crate::parser::{Endian, Parser};
 
 #[derive(Debug)]
+pub enum Ordering {
+    BigEndianNanoseconds(u32),
+    BigEndianMilliseconds(u32),
+    LittleEndianNanoseconds(u32),
+    LittleEndMilliseconds(u32),
+}
+
+impl Ordering {
+    pub fn new(magic: u32) -> Result<Ordering, CustomErrors> {
+        Ok(match magic {
+            0xA1B2C3D4 => Ordering::BigEndianNanoseconds(0xA1B2C3D4),
+            0xA1B23C4D => Ordering::BigEndianMilliseconds(0xA1B23C4D),
+            0xD4C3B2A1 => Ordering::LittleEndianNanoseconds(0xD4C3B2A1),
+            0x4D3CB2A1 => Ordering::LittleEndMilliseconds(0x4D3CB2A1),
+            _ => return Err(CustomErrors::BadMagicNumberError),
+        })
+    }
+    pub fn get_ordering(&self) -> u32 {
+        match *self {
+            Ordering::BigEndianNanoseconds(o) => o,
+            Ordering::BigEndianMilliseconds(o) => o,
+            Ordering::LittleEndianNanoseconds(o) => o,
+            Ordering::LittleEndMilliseconds(o) => o,
+        }
+    }
+}
+
+impl Display for Ordering {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        match *self {
+            Ordering::BigEndianNanoseconds(_) => write!(f, "Big endian - Nanoseconds"),
+            Ordering::BigEndianMilliseconds(_) => write!(f, "Big endian - Milliseconds"),
+            Ordering::LittleEndianNanoseconds(_) => write!(f, "Little endian - Nanoseconds"),
+            Ordering::LittleEndMilliseconds(_) => write!(f, "Little endian - Milliseconds"),
+        }
+    }
+}
+
+#[derive(Debug)]
 pub struct GlobalPcapHeader {
-     magic_number: u32,
+     magic_number: Ordering,
      version_major: u16,
      version_minor: u16,
      time_zone: i32,
@@ -16,9 +55,8 @@ pub struct GlobalPcapHeader {
 
 impl GlobalPcapHeader {
     pub fn parse(parser: &mut Parser) -> Result<GlobalPcapHeader, CustomErrors> {
-        let magic_number = parser.next_be::<u32>();
-        let endian = Endian::get_ordering(magic_number).unwrap();
-        parser.set_endian(endian);
+        let magic_number = Ordering::new(parser.next_be::<u32>()).unwrap();
+        parser.set_endian(&magic_number);
 
         Ok(GlobalPcapHeader {
             magic_number,

@@ -23,14 +23,10 @@ impl MarketDataPacket {
 
         length -= 16; // length of market data packet header
 
-        println!("######## Header:\n{}", header);
-
         let packet = match header.is_incremental() {
             true => PacketType::IncrementalPacket(IncrementalPacket::parse(parser, length)),
             false => PacketType::SnapshotPacket(SnapshotPacket::parse(parser, length).unwrap()),
         };
-
-        println!("######## Packet:\n{}", packet);
 
         MarketDataPacket {
             packet_length: parser.next::<u64>(),

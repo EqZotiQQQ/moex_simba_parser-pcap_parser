@@ -21,8 +21,9 @@ pub fn parse() {
     let mut parser = Parser::new(&path).expect("Failed to open file");
     let global_pcap_header = GlobalPcapHeader::parse(&mut parser).expect("Failed to parse header");
     println!("{}", global_pcap_header);
-
+    let mut i = 1;
     loop {
+        println!("Packet number {}", i);
         let record_header = RecordHeader::parse(&mut parser);
         println!("{}", record_header);
 
@@ -42,6 +43,7 @@ pub fn parse() {
 
         let market_data_packet = MarketDataPacket::parse(&mut parser, len);
         println!("{}", market_data_packet);
+        i+=1;
 
     }
 }
