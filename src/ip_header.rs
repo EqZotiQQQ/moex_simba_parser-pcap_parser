@@ -121,7 +121,7 @@ pub struct IpHeader {
 }
 
 impl IpHeader {
-    const SIZE: u8 = 14;
+    pub const SIZE: u8 = 16;
     pub fn parse(parser: &mut Parser) -> IpHeader {
         IpHeader {
             destination_mac: MacAddress::from(parser.next_mac()),
@@ -144,7 +144,7 @@ impl Display for IpHeader {
         writeln!(f, "== IP header: ==");
         write!(f, "Destination mac: {}\n", self.destination_mac);
         write!(f, "Source mac: {}\n", self.source_mac);
-        write!(f, "Protocol version: {}\n", self.protocol_version);
+        write!(f, "Protocol version: {}", self.protocol_version);
         write!(f, "Strange field (TODO): {}\n", self.strange_field);
         write!(f, "Differential services field: {}\n", self.differentiated_services_field);
         write!(f, "Total length: {}\n", self.total_length);

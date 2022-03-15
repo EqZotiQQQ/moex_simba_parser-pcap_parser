@@ -12,7 +12,6 @@ enum PacketType {
 
 #[derive(Debug, Clone)]
 pub struct MarketDataPacket {
-    packet_length: u64,
     market_data_packet_header: MarketDataPacketHeader,
     packet: PacketType,
 }
@@ -29,7 +28,6 @@ impl MarketDataPacket {
         };
 
         MarketDataPacket {
-            packet_length: parser.next::<u64>(),
             market_data_packet_header: header,
             packet
         }
@@ -52,8 +50,8 @@ impl Display for PacketType {
 impl Display for MarketDataPacket {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         writeln!(f, "=================== MarketDataPacket: ===================");
-        write!(f, "Packet length: {}\n", self.packet_length);
-        write!(f, "\nMarket data packet header:\n{}", self.market_data_packet_header);
+        // write!(f, "Market data packet length: {}\n", self.packet_length);
+        write!(f, "Market data packet header:\n{}", self.market_data_packet_header);
         writeln!(f, "\nMarket data packet header:\n{}", self.packet)
     }
 }

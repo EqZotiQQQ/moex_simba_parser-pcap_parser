@@ -15,7 +15,7 @@ impl Display for IncrementalPacketHeader {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         writeln!(f, "=================== Incremental packet header: ===================");
         write!(f, "transaction_time: {}\n", self.transaction_time);
-        writeln!(f, "\nexchange_trading_session_id: {}", self.exchange_trading_session_id)
+        writeln!(f, "exchange_trading_session_id: {}", self.exchange_trading_session_id)
     }
 }
 
@@ -33,23 +33,22 @@ impl IncrementalPacketHeader {
 pub struct IncrementalPacket {
     header: IncrementalPacketHeader,
     sbe_messages: Vec<SBEMessage>,
-    size: u64,
 }
 
 #[allow(unused_must_use)]
 impl Display for IncrementalPacket {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         writeln!(f, "=================== Market data packet: ===================");
-        write!(f, "header: {}\n", self.header);
+        write!(f, "{}\n", self.header);
         for (i, msg) in self.sbe_messages.iter().enumerate() {
             write!(f, "Message number {}:\n{}", i, msg);
         }
-        writeln!(f)
+        write!(f, "")
     }
 }
 
 impl IncrementalPacket {
-    pub(crate) fn parse(parser: &mut Parser, mut size: u64) -> IncrementalPacket {
+    pub fn parse(parser: &mut Parser, mut size: u64) -> IncrementalPacket {
         let header = IncrementalPacketHeader::parse(parser);
         size -= INCREMENTAL_PACKET_HEADER_SIZE as u64;
         let mut sbe_messages: Vec<SBEMessage> = vec![];
@@ -61,7 +60,6 @@ impl IncrementalPacket {
         IncrementalPacket {
             header,
             sbe_messages,
-            size,
         }
     }
 }

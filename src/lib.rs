@@ -32,12 +32,12 @@ pub fn parse() {
         let ip_header = IpHeader::parse(&mut parser);
         println!("{}", ip_header);
 
-        len -= 16; // ip header size
+        len -= IpHeader::SIZE as u64; // ip header size
 
         let udp_header = UdpHeader::parse(&mut parser);
         println!("{}", udp_header);
 
-        len -= 26; // udp header size
+        len -= UdpHeader::SIZE as u64; // udp header size
         // MOEX SIMBA PART
 
 

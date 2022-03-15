@@ -60,11 +60,11 @@ impl MarketDataPacketHeader {
 #[allow(unused_must_use)]
 impl Display for MarketDataPacketHeader {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        writeln!(f, "== Market data packet header: ==");
+        writeln!(f, "=================== Market data packet header: ===================");
         write!(f, "Message sequential number: {}\n", self.msg_seq_number);
         write!(f, "Message size: {}\n", self.msg_size);
-        write!(f, "Message flags: {}:", self.msg_flags);
-        writeln!(f, "\nSending time: {}", self.sending_time)
+        write!(f, "Message flags: {}", self.msg_flags);
+        writeln!(f, "Sending time: {}", self.sending_time)
     }
 }
 
