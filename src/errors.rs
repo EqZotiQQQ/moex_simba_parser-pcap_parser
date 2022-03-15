@@ -3,4 +3,6 @@ pub enum CustomErrors {
     FailedToOpenFile,
     BadMagicNumberError,
     BadMessageTypeError,
+    UnsupportedProtocolVersion,
+    UnsupportedProtocol,
 }

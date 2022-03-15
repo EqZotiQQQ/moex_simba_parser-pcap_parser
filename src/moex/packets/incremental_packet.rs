@@ -13,7 +13,7 @@ struct IncrementalPacketHeader {
 #[allow(unused_must_use)]
 impl Display for IncrementalPacketHeader {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        writeln!(f, "== Market data packet: ==");
+        writeln!(f, "=================== Incremental packet header: ===================");
         write!(f, "transaction_time: {}\n", self.transaction_time);
         writeln!(f, "\nexchange_trading_session_id: {}", self.exchange_trading_session_id)
     }
@@ -39,7 +39,7 @@ pub struct IncrementalPacket {
 #[allow(unused_must_use)]
 impl Display for IncrementalPacket {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        writeln!(f, "== Market data packet: ==");
+        writeln!(f, "=================== Market data packet: ===================");
         write!(f, "header: {}\n", self.header);
         for (i, msg) in self.sbe_messages.iter().enumerate() {
             write!(f, "Message number {}:\n{}", i, msg);
