@@ -26,6 +26,7 @@ enum OrderType {
     MarketDataRequest,
 }
 
+#[allow(unused_must_use)]
 impl Display for OrderType {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         writeln!(f, "Order type: ");
@@ -58,11 +59,12 @@ pub struct SBEMessage {
     parsed: u64,
 }
 
+#[allow(unused_must_use)]
 impl SBEMessage {
     pub fn parse(parser: &mut Parser) -> Result<SBEMessage, CustomErrors> {
         let header = SBEHeader::parse(parser).unwrap();
         let mut parsed: u64 = SBEHeader::SIZE as u64;
-        let mut order = match header.get_template_id() {
+        let order = match header.get_template_id() {
             MessageType::OrderBestPrices => Some(OrderType::OrderBestPrices(OrderBestPrices::parse(parser))),
             MessageType::OrderUpdate => Some(OrderType::OrderUpdate(OrderUpdate::parse(parser))),
             MessageType::OrderExecution => Some(OrderType::OrderExecution(OrderExecution::parse(parser))),

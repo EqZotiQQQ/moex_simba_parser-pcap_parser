@@ -1,4 +1,4 @@
-use std::fmt::{Display, Formatter, write};
+use std::fmt::{Display, Formatter};
 use mac_address::MacAddress;
 use crate::errors::CustomErrors;
 use crate::Parser;
@@ -49,6 +49,7 @@ impl Display for Protocol {
 
 struct FragmentAndOffset(u16);
 
+#[allow(unused_must_use)]
 impl Display for FragmentAndOffset {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match FragmentAndOffset::get_reserve_bit(self.0) {

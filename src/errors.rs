@@ -1,6 +1,6 @@
 #[derive(Debug)]
+#[allow(unused_must_use)]
 pub enum CustomErrors {
-    FailedToOpenFile,
     BadMagicNumberError,
     BadMessageTypeError,
     UnsupportedProtocolVersion,

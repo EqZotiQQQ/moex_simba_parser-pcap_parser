@@ -1,7 +1,6 @@
 use std::mem;
 use std::fs::File;
 use std::io::{BufReader, Read, Seek, SeekFrom};
-use std::io::SeekFrom::End;
 use std::path::Path;
 use crate::errors::CustomErrors;
 use crate::errors::CustomErrors::BadMagicNumberError;
@@ -13,6 +12,7 @@ pub enum Endian {
     Little,
 }
 
+#[allow(unused_must_use)]
 impl Endian {
     pub fn get_ordering(magic: u32) -> Result<Endian, CustomErrors> {
         Ok(match magic {
@@ -67,8 +67,10 @@ impl Parser {
         self.next_helper::<T>(self.endian.clone())
     }
 
+    #[allow(unused_must_use)]
     fn next_helper<T>(&mut self, endian: Endian) -> T
         where T: FromBytes {
+        println!("Current internal buffer position: {}", self.buffer_pos);
         let type_size = mem::size_of::<T>();
         if type_size > self.parsed_bytes - self.buffer_pos {
             self.fill_buffer();     // TODO: process later
@@ -116,6 +118,7 @@ impl Parser {
     }
 
 
+    #[allow(unused_must_use)]
     pub fn skip(&mut self, n: usize) -> Result<(), std::io::Error>{
         if n == 0 {
             return Ok(())

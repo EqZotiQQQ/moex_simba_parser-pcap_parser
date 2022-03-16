@@ -37,12 +37,10 @@ impl MarketDataPacket {
 #[allow(unused_must_use)]
 impl Display for PacketType {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(f, "PacketType: ");
         match self {
-            PacketType::IncrementalPacket(p) => writeln!(f, "Incremental packet:\n{}", p),//IncrementalPacket::fmt(f)),
-            PacketType::SnapshotPacket(p) => writeln!(f, "Snapshot packet:\n{}", p),
+            PacketType::IncrementalPacket(p) => writeln!(f, "{}", p),
+            PacketType::SnapshotPacket(p) => writeln!(f, "{}", p),
         }
-        // writeln!(f, "\nPacket display:\n{}", self)
     }
 }
 
@@ -51,7 +49,7 @@ impl Display for MarketDataPacket {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         writeln!(f, "=================== MarketDataPacket: ===================");
         // write!(f, "Market data packet length: {}\n", self.packet_length);
-        write!(f, "Market data packet header:\n{}", self.market_data_packet_header);
-        writeln!(f, "\nMarket data packet header:\n{}", self.packet)
+        write!(f, "{}", self.market_data_packet_header);
+        write!(f, "{}", self.packet)
     }
 }

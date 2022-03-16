@@ -40,6 +40,9 @@ pub fn parse() {
         len -= UdpHeader::SIZE as u64; // udp header size
         // MOEX SIMBA PART
 
+        if i == 5 {
+
+        }
 
         let market_data_packet = MarketDataPacket::parse(&mut parser, len);
         println!("{}", market_data_packet);

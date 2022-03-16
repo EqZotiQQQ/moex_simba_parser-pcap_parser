@@ -4,20 +4,21 @@ use crate::moex::packets::simple_binary_encoding::sbe_message::SBEMessage;
 use crate::Parser;
 
 
+#[allow(unused_must_use)]
 #[derive(Debug, Clone)]
 pub struct SnapshotPacket {
     sbe_message: SBEMessage,
-    size: u64,
+    // size: u64,
 }
 
 impl SnapshotPacket {
-    pub fn parse(parser: &mut Parser, length: u64) -> Result<SnapshotPacket, CustomErrors> {
+    pub fn parse(parser: &mut Parser, _length: u64) -> Result<SnapshotPacket, CustomErrors> {
         Ok(SnapshotPacket {
             sbe_message: match SBEMessage::parse(parser) {
                 Ok(packet) => packet,
                 Err(e) => return Err(e),
             },
-            size: length
+            // size: length
         })
     }
 }

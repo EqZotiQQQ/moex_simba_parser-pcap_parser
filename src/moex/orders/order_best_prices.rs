@@ -1,6 +1,7 @@
 use std::fmt::{Display, Formatter};
 use crate::Parser;
 
+#[allow(unused_must_use)]
 #[derive(Debug, Clone, Copy)]
 pub struct BestPricesOrderPayload {
     mkt_bid_px: i64,
@@ -19,6 +20,7 @@ impl Display for BestPricesOrderPayload {
     }
 }
 
+#[allow(unused_must_use)]
 #[derive(Debug, Clone)]
 pub struct OrderBestPrices {
     entry_size: u16,
@@ -38,6 +40,7 @@ impl Display for OrderBestPrices {
     }
 }
 
+#[allow(unused_must_use)]
 impl BestPricesOrderPayload {
     pub const SIZE: u8 = 21;
     pub fn parse(parser: &mut Parser) -> BestPricesOrderPayload {
@@ -50,6 +53,7 @@ impl BestPricesOrderPayload {
     }
 }
 
+#[allow(unused_must_use)]
 impl OrderBestPrices {
     pub const SIZE: u8 = 3;
     pub const TOTAL_SIZE: u8 = BestPricesOrderPayload::SIZE * OrderBestPrices::SIZE;
@@ -59,7 +63,7 @@ impl OrderBestPrices {
         OrderBestPrices {
             entry_size: s,
             no_md_entry: n,
-            md_entries: (0..n).map(|i| BestPricesOrderPayload::parse(parser)).collect(),
+            md_entries: (0..n).map(|_| BestPricesOrderPayload::parse(parser)).collect(),
         }
     }
 }

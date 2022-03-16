@@ -12,6 +12,7 @@ impl MessageFlags {
     const POS_DUP_FLAG: u16 = 0x10;
 }
 
+#[allow(unused_must_use)]
 impl Display for MessageFlags {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         writeln!(f, "{}", self.0);

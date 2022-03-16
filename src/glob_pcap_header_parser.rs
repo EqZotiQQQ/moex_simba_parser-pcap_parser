@@ -1,8 +1,8 @@
 use std::fmt::{Display, Formatter};
 use crate::errors::CustomErrors;
-use crate::errors::CustomErrors::BadMagicNumberError;
-use crate::parser::{Endian, Parser};
+use crate::parser::{Parser};
 
+#[allow(unused_must_use)]
 #[derive(Debug)]
 pub enum Ordering {
     BigEndianNanoseconds(u32),
