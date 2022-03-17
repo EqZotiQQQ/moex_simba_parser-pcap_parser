@@ -70,7 +70,7 @@ impl Parser {
     #[allow(unused_must_use)]
     fn next_helper<T>(&mut self, endian: Endian) -> T
         where T: FromBytes {
-        println!("Current internal buffer position: {}", self.buffer_pos);
+        // println!("Current internal buffer position: {}", self.buffer_pos);
         let type_size = mem::size_of::<T>();
         if type_size > self.parsed_bytes - self.buffer_pos {
             self.fill_buffer();     // TODO: process later
@@ -78,6 +78,7 @@ impl Parser {
         }
 
         let bytes = &mut self.buffer[self.buffer_pos .. self.buffer_pos + type_size];
+        // println!("bytes: {:?}", bytes);
         if endian == Endian::Big {
             bytes.reverse();
         }

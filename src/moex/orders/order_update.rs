@@ -16,6 +16,7 @@ pub struct OrderUpdate  {
 #[allow(unused_must_use)]
 impl Display for OrderUpdate {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        writeln!(f, "== OrderUpdate end ==");
         writeln!(f, "md_entry_id: {}", self.md_entry_id);
         writeln!(f, "md_entry_px: {}", self.md_entry_px);
         writeln!(f, "md_entry_size: {}", self.md_entry_size);
@@ -23,14 +24,15 @@ impl Display for OrderUpdate {
         writeln!(f, "security_id: {}", self.security_id);
         writeln!(f, "rpt_seq: {}", self.rpt_seq);
         writeln!(f, "md_update_action: {}", self.md_update_action);
-        writeln!(f, "md_entry_type: {}", self.md_entry_type)
+        writeln!(f, "md_entry_type: {}", self.md_entry_type);
+        writeln!(f, "== OrderUpdate end ==")
     }
 }
 
 impl OrderUpdate  {
     pub const SIZE: u8 = 42;
-    pub fn parse(parser: &mut Parser) -> OrderUpdate  {
-        OrderUpdate  {
+    pub fn parse(parser: &mut Parser) -> (OrderUpdate, u64)  {
+        (OrderUpdate  {
             md_entry_id: parser.next::<i64>(),
             md_entry_px: parser.next::<i64>(),
             md_entry_size: parser.next::<i64>(),
@@ -39,6 +41,6 @@ impl OrderUpdate  {
             rpt_seq: parser.next::<u32>(),
             md_update_action: parser.next::<u8>(),
             md_entry_type: parser.next::<u8>(),
-        }
+        }, OrderUpdate::SIZE as u64)
     }
 }

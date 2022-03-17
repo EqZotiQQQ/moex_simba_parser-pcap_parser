@@ -152,7 +152,8 @@ impl Display for IpHeader {
         write!(f, "Identification: {}\n", self.identification);
         write!(f, "Flags and fragment offset:\n{}", self.flags_and_fragment_offset);
         write!(f, "Time to live: {}\n", self.ttl);
-        writeln!(f, "UDP protocol: {}", self.udp_protocol)
+        writeln!(f, "UDP protocol: {}", self.udp_protocol);
+        writeln!(f, "== IpHeader end ==")
     }
 }
 

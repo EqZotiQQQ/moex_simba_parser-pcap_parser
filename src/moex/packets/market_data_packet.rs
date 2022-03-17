@@ -10,6 +10,7 @@ enum PacketType {
     SnapshotPacket(SnapshotPacket),
 }
 
+
 #[derive(Debug, Clone)]
 pub struct MarketDataPacket {
     market_data_packet_header: MarketDataPacketHeader,
@@ -19,13 +20,26 @@ pub struct MarketDataPacket {
 impl MarketDataPacket {
     pub fn parse(parser: &mut Parser, mut length: u64) -> MarketDataPacket {
         let header = MarketDataPacketHeader::parse(parser);
+        // println!("MarketDataPacketHeader {}", header);
 
         length -= 16; // length of market data packet header
 
         let packet = match header.is_incremental() {
-            true => PacketType::IncrementalPacket(IncrementalPacket::parse(parser, length)),
-            false => PacketType::SnapshotPacket(SnapshotPacket::parse(parser, length).unwrap()),
+            true => {
+                let (packet, parsed) = IncrementalPacket::parse(parser, length);
+                length -= parsed;
+                PacketType::IncrementalPacket(packet)
+            },
+            false => {
+                let (packet, parsed) = SnapshotPacket::parse(parser, length).unwrap();
+                length -= parsed;
+                PacketType::SnapshotPacket(packet)
+            },
         };
+
+        eprintln!("Skip {} bytes", length);
+
+        parser.skip(length as usize);
 
         MarketDataPacket {
             market_data_packet_header: header,
@@ -47,9 +61,10 @@ impl Display for PacketType {
 #[allow(unused_must_use)]
 impl Display for MarketDataPacket {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        writeln!(f, "=================== MarketDataPacket: ===================");
+        writeln!(f, "== MarketDataPacket: ==");
         // write!(f, "Market data packet length: {}\n", self.packet_length);
         write!(f, "{}", self.market_data_packet_header);
-        write!(f, "{}", self.packet)
+        write!(f, "{}", self.packet);
+        writeln!(f, "== MarketDataPacket end ==")
     }
 }

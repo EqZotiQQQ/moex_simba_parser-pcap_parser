@@ -1,7 +1,7 @@
 use std::fmt::{Display, Formatter};
 use crate::errors::CustomErrors;
 use crate::moex::orders::order_best_prices::OrderBestPrices;
-use crate::moex::orders::order_book_snapshot::OrderBookSnapshot;
+use crate::moex::orders::order_book_snapshot::{OrderBookSnapshot, OrderBookSnapshotPacket};
 use crate::moex::orders::order_execution::OrderExecution;
 use crate::moex::orders::order_update::OrderUpdate;
 use crate::moex::packets::simple_binary_encoding::sbe_header::{MessageType, SBEHeader};
@@ -12,7 +12,7 @@ use crate::Parser;
 enum OrderType {
     OrderUpdate(OrderUpdate),
     OrderExecution(OrderExecution),
-    OrderBookSnapshot(OrderBookSnapshot),
+    OrderBookSnapshotPacket(OrderBookSnapshotPacket),
     OrderBestPrices(OrderBestPrices),
     Heartbeat,
     SequenceReset,
@@ -33,21 +33,9 @@ impl Display for OrderType {
         match self {
             OrderType::OrderUpdate(order_update) => writeln!(f, "OrderUpdate\n{}", order_update),
             OrderType::OrderExecution(order_execution) => writeln!(f, "OrderExecution\n{}", order_execution),
-            OrderType::OrderBookSnapshot(order_book_snapshot) => writeln!(f, "OrderBookSnapshot\n{}", order_book_snapshot),
+            OrderType::OrderBookSnapshotPacket(order_book_snapshot) => writeln!(f, "OrderBookSnapshot\n{}", order_book_snapshot),
             OrderType::OrderBestPrices(order_best_prices) => writeln!(f, "OrderBestPrices\n{}", order_best_prices),
             _ => {writeln!(f, "One of other orders")}
-        }
-    }
-}
-
-impl OrderType {
-    fn get(&self) -> u64 {
-        match self {
-            OrderType::OrderUpdate(_) => OrderUpdate::SIZE as u64,
-            OrderType::OrderExecution(_) => OrderExecution::SIZE as u64,
-            OrderType::OrderBookSnapshot(_) => OrderBookSnapshot::SIZE as u64,
-            OrderType::OrderBestPrices(_) => OrderBestPrices::SIZE as u64,
-            _ => { 69 }
         }
     }
 }
@@ -56,46 +44,58 @@ impl OrderType {
 pub struct SBEMessage {
     header: SBEHeader,
     order: Option<OrderType>,
-    parsed: u64,
 }
 
 #[allow(unused_must_use)]
 impl SBEMessage {
-    pub fn parse(parser: &mut Parser) -> Result<SBEMessage, CustomErrors> {
+    pub fn parse(parser: &mut Parser) -> Result<(SBEMessage, u64), CustomErrors> {
+        const SIZE: u32 = 42;
         let header = SBEHeader::parse(parser).unwrap();
         let mut parsed: u64 = SBEHeader::SIZE as u64;
         let order = match header.get_template_id() {
-            MessageType::OrderBestPrices => Some(OrderType::OrderBestPrices(OrderBestPrices::parse(parser))),
-            MessageType::OrderUpdate => Some(OrderType::OrderUpdate(OrderUpdate::parse(parser))),
-            MessageType::OrderExecution => Some(OrderType::OrderExecution(OrderExecution::parse(parser))),
-            MessageType::OrderBookSnapshot => Some(OrderType::OrderBookSnapshot(OrderBookSnapshot::parse(parser))),
+            MessageType::OrderBestPrices => {
+                let (order, parsed_from_order) = OrderBestPrices::parse(parser);
+                parsed += parsed_from_order;
+                Some(OrderType::OrderBestPrices(order))
+            },
+            MessageType::OrderUpdate => {
+                let (order, parsed_from_order) = OrderUpdate::parse(parser);
+                parsed += parsed_from_order;
+                Some(OrderType::OrderUpdate(order))
+            },
+            MessageType::OrderExecution => {
+                let (order, parsed_from_order) = OrderExecution::parse(parser);
+                parsed += parsed_from_order;
+                Some(OrderType::OrderExecution(order))
+            },
+            MessageType::OrderBookSnapshotPacket => {
+                let (order, parsed_from_order) = OrderBookSnapshotPacket::parse(parser);
+                parsed += parsed_from_order;
+                Some(OrderType::OrderBookSnapshotPacket(order))
+            },
             _ => {
                 parser.skip(header.get_block_length() as usize); // TODO pass error
                 parsed += header.get_block_length() as u64;
                 None
             }
         };
+        println!("Parsed in sbe: {}", parsed);
         if order.is_some() {
-            parsed += order.as_ref().unwrap().get();
-            Ok(SBEMessage {
+            Ok((SBEMessage {
                 header,
                 order,
-                parsed,
-            })
+            }, parsed))
         } else {
             Err(CustomErrors::BadMessageTypeError)
         }
     }
 
-    pub fn parsed(&self) -> u64 {
-        self.parsed
-    }
 }
 
 #[allow(unused_must_use)]
 impl Display for SBEMessage {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        writeln!(f, "=================== SBE message: ===================");
+        writeln!(f, "== SBE message: ==");
         writeln!(f, "Version: {}", self.header);
         writeln!(f, "Order: {}", self.order.as_ref().unwrap())
     }

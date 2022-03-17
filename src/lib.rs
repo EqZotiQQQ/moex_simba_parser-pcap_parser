@@ -44,9 +44,12 @@ pub fn parse() {
 
         }
 
+        // println!("{:?}", parser);
         let market_data_packet = MarketDataPacket::parse(&mut parser, len);
         println!("{}", market_data_packet);
         i+=1;
-
+        // if i == 6 {
+        //     break
+        // }
     }
 }

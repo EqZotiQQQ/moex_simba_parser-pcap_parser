@@ -80,6 +80,7 @@ impl Display for GlobalPcapHeader {
         write!(f, "Time zone: {}\n", self.time_zone);
         write!(f, "Sig figs: {}\n", self.sig_figs);
         write!(f, "Snap len: {}\n", self.snap_len);
-        writeln!(f, "Network: {}", self.network)
+        writeln!(f, "Network: {}", self.network);
+        writeln!(f, "== GlobalPcapHeader end ==")
     }
 }

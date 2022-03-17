@@ -10,7 +10,7 @@ pub enum MessageType {
     EmptyBook = 4,
     OrderUpdate = 5,
     OrderExecution = 6,
-    OrderBookSnapshot = 7,
+    OrderBookSnapshotPacket = 7,
     SecurityDefinition = 8,
     SecurityStatus = 9,
     SecurityDefinitionUpdateReport = 10,
@@ -41,7 +41,7 @@ impl SBEHeader {
                 4 => MessageType::EmptyBook,
                 5 => MessageType::OrderUpdate,
                 6 => MessageType::OrderExecution,
-                7 => MessageType::OrderBookSnapshot,
+                7 => MessageType::OrderBookSnapshotPacket,
                 8 => MessageType::SecurityDefinition,
                 9 => MessageType::SecurityStatus,
                 10 => MessageType::SecurityDefinitionUpdateReport,
@@ -71,7 +71,7 @@ impl Display for MessageType {
         match self {
             MessageType::OrderUpdate => write!(f, "(OrderUpdate)"),
             MessageType::OrderExecution => write!(f, "(OrderExecution)"),
-            MessageType::OrderBookSnapshot => write!(f, "(OrderBookSnapshot)"),
+            MessageType::OrderBookSnapshotPacket => write!(f, "(OrderBookSnapshot)"),
             MessageType::OrderBestPrices => write!(f, "(OrderBestPrices)"),
             MessageType::Heartbeat => write!(f, "(Heartbeat)"),
             MessageType::SequenceReset => write!(f, "(SequenceReset)"),
@@ -90,7 +90,7 @@ impl Display for MessageType {
 #[allow(unused_must_use)]
 impl Display for SBEHeader {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        writeln!(f, "== UDP header: ==");
+        writeln!(f, "== SBE header: ==");
         write!(f, "Block length: {}\n", self.block_length);
         write!(f, "Template id: {}\n", self.template_id);
         write!(f, "Schema ID: {}\n", self.schema_id);

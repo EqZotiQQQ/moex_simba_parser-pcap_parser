@@ -18,6 +18,8 @@ impl Display for MessageFlags {
         writeln!(f, "{}", self.0);
         if (self.0 & MessageFlags::MESSAGE_FRAGMENTATION) == MessageFlags::MESSAGE_FRAGMENTATION {
             writeln!(f, "* Message fragmentation");
+        } else {
+            writeln!(f, "* !Message fragmentation");
         }
         if (self.0 & MessageFlags::FIRST_MESSAGE) == MessageFlags::FIRST_MESSAGE {
             writeln!(f, "* First message");
@@ -27,11 +29,15 @@ impl Display for MessageFlags {
         }
         if (self.0 & MessageFlags::INCREMENTAL_MESSAGE) == MessageFlags::INCREMENTAL_MESSAGE {
             writeln!(f, "* Incremental packet");
+        } else {
+            writeln!(f, "* !Incremental packet");
         }
         if (self.0 & MessageFlags::POS_DUP_FLAG) == MessageFlags::POS_DUP_FLAG {
             writeln!(f, "* Pos dup flag");
+        } else {
+            writeln!(f, "* !Pos dup flag");
         }
-        writeln!(f)
+        writeln!(f, "== MessageFlags end ==")
     }
 }
 
@@ -61,11 +67,12 @@ impl MarketDataPacketHeader {
 #[allow(unused_must_use)]
 impl Display for MarketDataPacketHeader {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        writeln!(f, "=================== Market data packet header: ===================");
+        writeln!(f, "== Market data packet header: ==");
         write!(f, "Message sequential number: {}\n", self.msg_seq_number);
         write!(f, "Message size: {}\n", self.msg_size);
         write!(f, "Message flags: {}", self.msg_flags);
-        writeln!(f, "Sending time: {}", self.sending_time)
+        writeln!(f, "Sending time: {}", self.sending_time);
+        writeln!(f, "== MarketDataPacketHeader end ==")
     }
 }
 

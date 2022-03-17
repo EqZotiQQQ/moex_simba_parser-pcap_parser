@@ -31,11 +31,12 @@ impl UdpHeader {
 #[allow(unused_must_use)]
 impl Display for UdpHeader {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        writeln!(f, "=================== UDP header: ===================");
+        writeln!(f, "== UdpHeader: ==");
         write!(f, "Check sum: {}\n", self.check_sum);
         write!(f, "Source ip: {}:{}\n", self.source_ip, self.source_port);
         write!(f, "Destination ip: {}:{}\n", self.dest_ip,  self.destination_port);
         write!(f, "Length: {}\n", self.length);
-        writeln!(f, "Check sum UDP: {}", self.check_sum_udp)
+        writeln!(f, "Check sum UDP: {}", self.check_sum_udp);
+        writeln!(f, "== UdpHeader end ==")
     }
 }
