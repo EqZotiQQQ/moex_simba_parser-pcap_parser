@@ -24,6 +24,11 @@ pub fn parse() {
     let mut i = 1;
     loop {
         println!("Packet number {}", i);
+
+        if i == 6305 {
+            println!("");
+        }
+
         let record_header = RecordHeader::parse(&mut parser);
         println!("{}", record_header);
 
@@ -40,9 +45,6 @@ pub fn parse() {
         len -= UdpHeader::SIZE as u64; // udp header size
         // MOEX SIMBA PART
 
-        if i == 5 {
-
-        }
 
         // println!("{:?}", parser);
         let market_data_packet = MarketDataPacket::parse(&mut parser, len);

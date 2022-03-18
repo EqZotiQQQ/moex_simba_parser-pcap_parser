@@ -51,11 +51,12 @@ impl Display for IncrementalPacket {
 impl IncrementalPacket {
     pub fn parse(parser: &mut Parser, mut size: u64) -> (IncrementalPacket, u64) {
         let header = IncrementalPacketHeader::parse(parser);
+        println!("$$$ {}", header);
         let mut parsed = 0;
         parsed += IncrementalPacketHeader::SIZE as u64;
         let mut sbe_messages: Vec<SBEMessage> = vec![];
         while size > parsed {
-            let (sbe_message, parsed_from_sbe) = SBEMessage::parse(parser).unwrap();
+            let (sbe_message, parsed_from_sbe) = SBEMessage::parse(parser);
             parsed += parsed_from_sbe;
             sbe_messages.push(sbe_message);
         }

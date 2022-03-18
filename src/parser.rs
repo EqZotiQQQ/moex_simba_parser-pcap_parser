@@ -23,11 +23,10 @@ impl Endian {
     }
 }
 
-const BUFFER_MAX_SIZE: usize = 2048;
 
 #[derive(Debug)]
 pub struct Parser {
-    buffer: [u8; BUFFER_MAX_SIZE],
+    buffer: [u8; Parser::BUFFER_MAX_SIZE],
     buffer_pos: usize,
     parsed_bytes: usize,
     endian: Endian,
@@ -35,9 +34,10 @@ pub struct Parser {
 }
 
 impl Parser {
+    const BUFFER_MAX_SIZE: usize = 15;
     pub fn new(path: &str) -> Result<Parser, std::io::Error> {
         Ok(Parser {
-            buffer: [0; BUFFER_MAX_SIZE],
+            buffer: [0; Parser::BUFFER_MAX_SIZE],
             buffer_pos: 0,
             parsed_bytes: 0,
             endian: Endian::Big,
@@ -72,13 +72,15 @@ impl Parser {
         where T: FromBytes {
         // println!("Current internal buffer position: {}", self.buffer_pos);
         let type_size = mem::size_of::<T>();
+        let mut shifted = false;
         if type_size > self.parsed_bytes - self.buffer_pos {
-            self.fill_buffer();     // TODO: process later
+            self.fill_buffer(shifted);     // TODO: process later
+            shifted = true;
             self.buffer_pos = 0;
         }
 
         let bytes = &mut self.buffer[self.buffer_pos .. self.buffer_pos + type_size];
-        // println!("bytes: {:?}", bytes);
+        let copy: Vec<u8> = bytes.iter().map(|&i| i).collect();
         if endian == Endian::Big {
             bytes.reverse();
         }
@@ -89,12 +91,20 @@ impl Parser {
         value
     }
 
-    fn fill_buffer(&mut self) -> Result<(), std::io::Error> {
+    fn fill_buffer(&mut self, shifted: bool) -> Result<(), std::io::Error> {
         let left = self.parsed_bytes - self.buffer_pos;
-        for i in 0..left {
-            self.buffer[i] = self.buffer[BUFFER_MAX_SIZE - left + i];
+        if !shifted {
+            for i in 0..left {
+                self.buffer[i] = self.buffer[Parser::BUFFER_MAX_SIZE - left + i];
+            }
         }
-        self.parsed_bytes = self.buffered_reader.read(&mut self.buffer[left .. BUFFER_MAX_SIZE])? + left;
+        self.buffered_reader.read_exact(&mut self.buffer[left .. Parser::BUFFER_MAX_SIZE])?;
+        self.parsed_bytes = 15;
+        // if self.parsed_bytes < Parser::BUFFER_MAX_SIZE {
+            // println!("Parsed only {} bytes", self.parsed_bytes);
+            // panic!();
+        // }
+        // println!("Parsed bytes: {}", self.parsed_bytes);
         Ok(())
     }
 
@@ -124,12 +134,13 @@ impl Parser {
         if n == 0 {
             return Ok(())
         } else {
-            if BUFFER_MAX_SIZE > self.buffer_pos + n {
+            if Parser::BUFFER_MAX_SIZE > self.buffer_pos + n {
                 self.buffer_pos += n;
             } else {
-                let left_in_buf = BUFFER_MAX_SIZE - self.buffer_pos;
+                let left_in_buf = Parser::BUFFER_MAX_SIZE - self.buffer_pos;
                 self.buffered_reader.seek_relative((n - left_in_buf) as i64);
-                self.parsed_bytes = self.buffered_reader.read(&mut self.buffer)?;
+                self.buffered_reader.read_exact(&mut self.buffer)?;
+                self.parsed_bytes = 15;
                 self.buffer_pos = 0;
             }
         }

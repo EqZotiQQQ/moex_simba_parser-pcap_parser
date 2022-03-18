@@ -22,6 +22,7 @@ impl MarketDataPacket {
         let header = MarketDataPacketHeader::parse(parser);
         // println!("MarketDataPacketHeader {}", header);
 
+        println!("!!!{}", header);
         length -= 16; // length of market data packet header
 
         let packet = match header.is_incremental() {

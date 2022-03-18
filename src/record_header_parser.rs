@@ -11,11 +11,15 @@ pub struct RecordHeader {
 
 impl RecordHeader {
     pub fn parse(parser: &mut Parser) -> RecordHeader {
+        let ts_ms = parser.next::<u32>();
+        let ts_us = parser.next::<u32>();
+        let pack_length = parser.next::<u32>();
+        let real_length = parser.next::<u32>();
         RecordHeader {
-            ts_ms: parser.next::<u32>(),
-            ts_us: parser.next::<u32>(),
-            pack_length: parser.next::<u32>(),
-            real_length: parser.next::<u32>(),
+            ts_ms,
+            ts_us,
+            pack_length,
+            real_length,
         }
     }
 

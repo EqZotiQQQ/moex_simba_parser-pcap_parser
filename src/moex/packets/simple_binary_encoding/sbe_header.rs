@@ -32,27 +32,35 @@ impl SBEHeader {
     pub const SIZE: u16 = 8;
 
     pub fn parse(parser: &mut Parser) -> Result<SBEHeader, CustomErrors> {
+        let block_length = parser.next::<u16>();
+        println!("Block len: {}", block_length);
+        let template_id = match parser.next::<u16>() {
+            1 => MessageType::Heartbeat,
+            2 => MessageType::SequenceReset,
+            3 => MessageType::OrderBestPrices,
+            4 => MessageType::EmptyBook,
+            5 => MessageType::OrderUpdate,
+            6 => MessageType::OrderExecution,
+            7 => MessageType::OrderBookSnapshotPacket,
+            8 => MessageType::SecurityDefinition,
+            9 => MessageType::SecurityStatus,
+            10 => MessageType::SecurityDefinitionUpdateReport,
+            11 => MessageType::TradingSessionStatus,
+            1000 => MessageType::Logon,
+            1001 => MessageType::Logout,
+            1002 => MessageType::MarketDataRequest,
+            e => {
+                println!("Bad msg type {}", e);
+                return Err(CustomErrors::BadMessageTypeError);
+            }
+        };
+        let schema_id = parser.next::<u16>();
+        let version = parser.next::<u16>();
         Ok(SBEHeader {
-            block_length: parser.next::<u16>(),
-            template_id: match parser.next::<u16>() {
-                1 => MessageType::Heartbeat,
-                2 => MessageType::SequenceReset,
-                3 => MessageType::OrderBestPrices,
-                4 => MessageType::EmptyBook,
-                5 => MessageType::OrderUpdate,
-                6 => MessageType::OrderExecution,
-                7 => MessageType::OrderBookSnapshotPacket,
-                8 => MessageType::SecurityDefinition,
-                9 => MessageType::SecurityStatus,
-                10 => MessageType::SecurityDefinitionUpdateReport,
-                11 => MessageType::TradingSessionStatus,
-                1000 => MessageType::Logon,
-                1001 => MessageType::Logout,
-                1002 => MessageType::MarketDataRequest,
-                _ => return Err(CustomErrors::BadMessageTypeError)
-            },
-            schema_id: parser.next::<u16>(),
-            version: parser.next::<u16>(),
+            block_length,
+            template_id,
+            schema_id,
+            version
         })
     }
 

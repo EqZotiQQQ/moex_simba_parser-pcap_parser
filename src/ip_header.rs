@@ -124,17 +124,29 @@ pub struct IpHeader {
 impl IpHeader {
     pub const SIZE: u8 = 16;
     pub fn parse(parser: &mut Parser) -> IpHeader {
+        let destination_mac = MacAddress::from(parser.next_mac());
+        println!("destination_mac = {}", destination_mac);
+        let source_mac = MacAddress::from(parser.next_mac());
+        println!("source_mac = {}", source_mac);
+        let protocol_version = ProtocolVersion::new(parser.next_be::<u16>()).unwrap();
+        let strange_field = parser.next::<u8>();
+        let differentiated_services_field = parser.next::<u8>();
+        let total_length = parser.next_be::<u16>();
+        let identification = parser.next_be::<u16>();
+        let flags_and_fragment_offset = FragmentAndOffset::new(parser.next_be::<u16>());
+        let ttl = parser.next::<u8>();
+        let udp_protocol = Protocol::new(parser.next::<u8>()).unwrap();
         IpHeader {
-            destination_mac: MacAddress::from(parser.next_mac()),
-            source_mac: MacAddress::from(parser.next_mac()),
-            protocol_version: ProtocolVersion::new(parser.next_be::<u16>()).unwrap(),
-            strange_field: parser.next::<u8>(),
-            differentiated_services_field: parser.next::<u8>(),
-            total_length: parser.next_be::<u16>(),
-            identification: parser.next_be::<u16>(),
-            flags_and_fragment_offset: FragmentAndOffset::new(parser.next_be::<u16>()),
-            ttl: parser.next::<u8>(),
-            udp_protocol: Protocol::new(parser.next::<u8>()).unwrap(),
+            destination_mac,
+            source_mac,
+            protocol_version,
+            strange_field,
+            differentiated_services_field,
+            total_length,
+            identification,
+            flags_and_fragment_offset,
+            ttl,
+            udp_protocol,
         }
     }
 }

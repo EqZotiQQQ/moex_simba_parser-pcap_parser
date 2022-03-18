@@ -64,7 +64,7 @@ impl OrderBookSnapshotPacket {
         let no_md_entries = parser.next::<u8>();
         let md_entries: Vec<OrderBookSnapshot> = (0..no_md_entries).map(|_| OrderBookSnapshot::parse(parser).0).collect();
 
-        let size = block_len * no_md_entries as u16;
+        let size = block_len * no_md_entries as u16 + 19;
         (OrderBookSnapshotPacket {
             security_id,
             last_msg_seq_num_processed,

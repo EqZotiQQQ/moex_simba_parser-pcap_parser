@@ -48,7 +48,7 @@ pub struct SBEMessage {
 
 #[allow(unused_must_use)]
 impl SBEMessage {
-    pub fn parse(parser: &mut Parser) -> Result<(SBEMessage, u64), CustomErrors> {
+    pub fn parse(parser: &mut Parser) -> (SBEMessage, u64) {
         const SIZE: u32 = 42;
         let header = SBEHeader::parse(parser).unwrap();
         let mut parsed: u64 = SBEHeader::SIZE as u64;
@@ -79,15 +79,11 @@ impl SBEMessage {
                 None
             }
         };
-        println!("Parsed in sbe: {}", parsed);
-        if order.is_some() {
-            Ok((SBEMessage {
-                header,
-                order,
-            }, parsed))
-        } else {
-            Err(CustomErrors::BadMessageTypeError)
-        }
+        // println!("Parsed in sbe: {}", parsed);
+        (SBEMessage {
+            header,
+            order,
+        }, parsed)
     }
 
 }
@@ -97,7 +93,11 @@ impl Display for SBEMessage {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         writeln!(f, "== SBE message: ==");
         writeln!(f, "Version: {}", self.header);
-        writeln!(f, "Order: {}", self.order.as_ref().unwrap())
+        if self.order.is_some() {
+            writeln!(f, "Order: {}", self.order.as_ref().unwrap())
+        } else {
+            writeln!(f)
+        }
     }
 }
 

@@ -12,10 +12,7 @@ pub struct SnapshotPacket {
 
 impl SnapshotPacket {
     pub fn parse(parser: &mut Parser, length: u64) -> Result<(SnapshotPacket, u64), CustomErrors> {
-        let (sbe_message, parsed_from_sbe) = match SBEMessage::parse(parser) {
-                Ok(packet) => packet,
-                Err(e) => return Err(e),
-            };
+        let (sbe_message, parsed_from_sbe) = SBEMessage::parse(parser);
         println!("Parsed {}", parsed_from_sbe);
         Ok((SnapshotPacket {
             sbe_message
