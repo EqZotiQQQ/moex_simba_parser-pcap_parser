@@ -2,6 +2,9 @@ pub mod details {
     use std::fmt::{Display, Formatter};
     use crate::errors::CustomErrors;
 
+    pub const INT64_NULL: i64 = -9223372036854775808;
+    pub const DECIMAL5_NULL : i64 = 9223372036854775807;
+
     #[derive(Debug, Clone, Copy)]
     pub enum MDUpdateAction {
         New,

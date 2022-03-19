@@ -153,6 +153,7 @@ impl Display for Version {
     }
 }
 
+#[allow(unused_must_use)]
 impl Display for VersionAndLength {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         writeln!(f, "* Version: {}", self.get_version());

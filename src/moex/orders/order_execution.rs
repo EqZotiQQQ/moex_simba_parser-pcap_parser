@@ -1,5 +1,5 @@
 use std::fmt::{Display, Formatter};
-use crate::moex::orders::details::details::{MDEntryType, MDUpdateAction};
+use crate::moex::orders::details::details::{DECIMAL5_NULL, INT64_NULL, MDEntryType, MDUpdateAction};
 use crate::moex::orders::order_update::EntryType;
 use crate::{CustomErrors, Parser};
 
@@ -23,8 +23,16 @@ impl Display for OrderExecution {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         writeln!(f, "== OrderExecution ==");
         writeln!(f, "Order ID: {}", self.md_entry_id);
-        writeln!(f, "Order price: {}", self.md_entry_px);
-        writeln!(f, "Remaining quantity in the order: {}", self.md_entry_size);
+        if self.md_entry_px == DECIMAL5_NULL {
+            writeln!(f, "Order price: Null");
+        } else {
+            writeln!(f, "Order price: {}", self.md_entry_px);
+        }
+        if self.md_entry_size == INT64_NULL {
+            writeln!(f, "Remaining quantity in the order: Null");
+        } else {
+            writeln!(f, "Remaining quantity in the order: {}", self.md_entry_size);
+        }
         writeln!(f, "Trade price: {}", self.last_px);
         writeln!(f, "Trade volume: {}", self.last_qty);
         writeln!(f, "Trade ID: {}", self.trade_id);

@@ -1,5 +1,5 @@
 use std::fmt::{Display, Formatter};
-use crate::moex::orders::details::details::MDEntryType;
+use crate::moex::orders::details::details::{DECIMAL5_NULL, INT64_NULL, MDEntryType};
 use crate::{CustomErrors, Parser};
 
 #[derive(Debug, Clone, Copy)]
@@ -17,11 +17,28 @@ pub struct OrderBookSnapshot {
 impl Display for OrderBookSnapshot {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         writeln!(f, "== OrderBookSnapshot ==");
-        writeln!(f, "Order ID: {}", self.md_entry_id);
+
+        if self.md_entry_id == INT64_NULL {
+            writeln!(f, "Order ID: Null");
+        } else {
+            writeln!(f, "Order ID: {}", self.md_entry_id);
+        }
         writeln!(f, "The start time of the event processing. UNIX time in nanoseconds, according to UTC: {}", self.transact_time);
-        writeln!(f, "Order price: {}", self.md_entry_px);
-        writeln!(f, "Order volume: {}", self.md_entry_size);
-        writeln!(f, "Trade ID: {}", self.trade_id);
+        if self.md_entry_px == DECIMAL5_NULL {
+            writeln!(f, "Order price: Null");
+        } else {
+            writeln!(f, "Order price: {}", self.md_entry_px);
+        }
+        if self.md_entry_size == INT64_NULL {
+            writeln!(f, "No volumes left: Null");
+        } else {
+            writeln!(f, "Order volume: {}", self.md_entry_size);
+        }
+        if self.trade_id == INT64_NULL {
+            writeln!(f, "Trade ID: Null");
+        } else {
+            writeln!(f, "Trade ID: {}", self.trade_id);
+        }
         writeln!(f, "Order or trade type: {}", self.md_flags);
         writeln!(f, "Record type: {}", self.md_entry_type);
         writeln!(f, "== OrderBookSnapshot end ==")
@@ -78,6 +95,7 @@ impl OrderBookSnapshotPacket {
     }
 }
 
+#[allow(unused_must_use)]
 impl Display for OrderBookSnapshotPacket {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         writeln!(f, "Instrument numeric code: {}", self.security_id);

@@ -23,6 +23,7 @@ impl EntryType {
     const RFS_ORDER: u64= 0x400000000000; // - Заявка из системы RFS
 }
 
+#[allow(unused_must_use)]
 impl Display for EntryType {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         writeln!(f);

@@ -21,14 +21,6 @@ impl Ordering {
             _ => return Err(CustomErrors::BadMagicNumberError),
         })
     }
-    pub fn get_ordering(&self) -> u32 {
-        match *self {
-            Ordering::BigEndianNanoseconds(o) => o,
-            Ordering::BigEndianMilliseconds(o) => o,
-            Ordering::LittleEndianNanoseconds(o) => o,
-            Ordering::LittleEndMilliseconds(o) => o,
-        }
-    }
 }
 
 impl Display for Ordering {

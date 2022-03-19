@@ -22,14 +22,12 @@ impl Display for BestPricesOrderPayload {
     }
 }
 
-#[allow(unused_must_use)]
 #[derive(Debug, Clone)]
 pub struct OrderBestPrices {
     entry_size: u16,
     no_md_entry: u8,
     md_entries: Vec<BestPricesOrderPayload>,
 }
-
 
 #[allow(unused_must_use)]
 impl Display for OrderBestPrices {
@@ -44,7 +42,6 @@ impl Display for OrderBestPrices {
     }
 }
 
-#[allow(unused_must_use)]
 impl BestPricesOrderPayload {
     pub const SIZE: u8 = 21;
     pub fn parse(parser: &mut Parser) -> Result<BestPricesOrderPayload, CustomErrors> {
@@ -57,7 +54,6 @@ impl BestPricesOrderPayload {
     }
 }
 
-#[allow(unused_must_use)]
 impl OrderBestPrices {
     pub const SIZE: u8 = 3;
     pub const TOTAL_SIZE: u8 = BestPricesOrderPayload::SIZE * OrderBestPrices::SIZE;
@@ -65,13 +61,9 @@ impl OrderBestPrices {
         let s = parser.next::<u16>();
         let n = parser.next::<u8>();
         let mut md_entries: Vec<BestPricesOrderPayload> = vec![];
-        for i in 0..n {
+        for _ in 0..n {
             md_entries.push(BestPricesOrderPayload::parse(parser)?);
         }
-        // let md_entries: Vec<BestPricesOrderPayload> =  (0..n).map(|_| {
-        //     let order = BestPricesOrderPayload::parse(parser)?;
-        //     order
-        // }).collect();
         Ok((OrderBestPrices {
             entry_size: s,
             no_md_entry: n,

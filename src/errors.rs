@@ -1,6 +1,5 @@
 use std::error::Error;
 use std::fmt::{Display, Formatter};
-use std::io::ErrorKind;
 
 #[derive(Debug)]
 #[allow(unused_must_use)]
@@ -29,6 +28,7 @@ impl Display for CustomErrors {
         }
     }
 }
+
 
 impl Error for CustomErrors {
 

@@ -1,6 +1,6 @@
 use std::mem;
 use std::fs::File;
-use std::io::{BufReader, Read, Seek, SeekFrom};
+use std::io::{BufReader, Read};
 use std::path::Path;
 use crate::errors::CustomErrors;
 use crate::glob_pcap_header_parser::Ordering;
@@ -10,18 +10,6 @@ pub enum Endian {
     Big,
     Little,
 }
-
-#[allow(unused_must_use)]
-impl Endian {
-    pub fn get_ordering(magic: u32) -> Result<Endian, CustomErrors> {
-        Ok(match magic {
-            0xA1B2C3D4 | 0xA1B23C4D => Endian::Big,
-            0xD4C3B2A1 | 0x4D3CB2A1 => Endian::Little,
-            _ => return Err(CustomErrors::BadMagicNumberError)
-        })
-    }
-}
-
 
 #[derive(Debug)]
 pub struct Parser {
@@ -45,7 +33,7 @@ impl Parser {
                 buffered_reader: BufReader::new(f),
             })
             },
-            Err(e) => return Err(CustomErrors::FailedToOpenFile)
+            Err(_) => return Err(CustomErrors::FailedToOpenFile)
         }
     }
 
@@ -124,11 +112,7 @@ impl Parser {
         mac
     }
 
-    pub fn get_file_pos(&mut self) -> u64 {
-        self.buffered_reader.seek(SeekFrom::Current(0)).unwrap()
-    }
-
-    pub fn skip(&mut self, n: usize) -> Result<(), std::io::Error>{
+    pub fn skip(&mut self, n: usize) -> Result<(), CustomErrors>{
         if n == 0 {
             return Ok(())
         } else {

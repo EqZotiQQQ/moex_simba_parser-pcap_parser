@@ -33,13 +33,13 @@ impl MarketDataPacket {
                 PacketType::IncrementalPacket(packet)
             },
             false => {
-                let (packet, parsed) = SnapshotPacket::parse(parser, length)?;
+                let (packet, parsed) = SnapshotPacket::parse(parser)?;
                 length -= parsed;
                 PacketType::SnapshotPacket(packet)
             },
         };
 
-        parser.skip(length as usize);
+        parser.skip(length as usize)?;
 
         Ok(MarketDataPacket {
             market_data_packet_header: header,

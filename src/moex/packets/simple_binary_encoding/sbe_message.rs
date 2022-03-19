@@ -1,7 +1,7 @@
 use std::fmt::{Display, Formatter};
 use crate::errors::CustomErrors;
 use crate::moex::orders::order_best_prices::OrderBestPrices;
-use crate::moex::orders::order_book_snapshot::{OrderBookSnapshot, OrderBookSnapshotPacket};
+use crate::moex::orders::order_book_snapshot::{OrderBookSnapshotPacket};
 use crate::moex::orders::order_execution::OrderExecution;
 use crate::moex::orders::order_update::OrderUpdate;
 use crate::moex::packets::simple_binary_encoding::sbe_header::{MessageType, SBEHeader};
@@ -49,7 +49,6 @@ pub struct SBEMessage {
 #[allow(unused_must_use)]
 impl SBEMessage {
     pub fn parse(parser: &mut Parser) -> Result<(SBEMessage, u64), CustomErrors> {
-        const SIZE: u32 = 42;
         let header = SBEHeader::parse(parser)?;
         let mut parsed: u64 = SBEHeader::SIZE as u64;
         let order = match header.get_template_id() {

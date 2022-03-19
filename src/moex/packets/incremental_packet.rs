@@ -47,7 +47,7 @@ impl Display for IncrementalPacket {
 }
 
 impl IncrementalPacket {
-    pub fn parse(parser: &mut Parser, mut size: u64) -> Result<(IncrementalPacket, u64), CustomErrors> {
+    pub fn parse(parser: &mut Parser, size: u64) -> Result<(IncrementalPacket, u64), CustomErrors> {
         let header = IncrementalPacketHeader::parse(parser);
         let mut parsed = 0;
         parsed += IncrementalPacketHeader::SIZE as u64;
