@@ -1,6 +1,6 @@
 use std::fmt::{Display, Formatter};
 use crate::moex::orders::details::details::MDEntryType;
-use crate::Parser;
+use crate::{CustomErrors, Parser};
 
 #[derive(Debug, Clone, Copy)]
 pub struct OrderBookSnapshot {
@@ -30,16 +30,16 @@ impl Display for OrderBookSnapshot {
 
 impl OrderBookSnapshot {
     pub const SIZE: u8 = 49;
-    pub fn parse(parser: &mut Parser) -> (OrderBookSnapshot, u64) {
-        (OrderBookSnapshot {
+    pub fn parse(parser: &mut Parser) -> Result<(OrderBookSnapshot, u64), CustomErrors> {
+        Ok((OrderBookSnapshot {
             md_entry_id: parser.next::<i64>(),
             transact_time: parser.next::<u64>(),
             md_entry_px: parser.next::<i64>(),
             md_entry_size: parser.next::<i64>(),
             trade_id: parser.next::<i64>(),
             md_flags: parser.next::<u64>(),
-            md_entry_type: MDEntryType::new(parser.next::<u8>()).unwrap(),
-        }, OrderBookSnapshot::SIZE as u64)
+            md_entry_type: MDEntryType::new(parser.next::<u8>())?,
+        }, OrderBookSnapshot::SIZE as u64))
     }
 }
 
@@ -56,17 +56,17 @@ pub struct OrderBookSnapshotPacket {
 }
 
 impl OrderBookSnapshotPacket {
-    pub fn parse(parser: &mut Parser) -> (OrderBookSnapshotPacket, u64) {
+    pub fn parse(parser: &mut Parser) -> Result<(OrderBookSnapshotPacket, u64), CustomErrors> {
         let security_id = parser.next::<i32>();
         let last_msg_seq_num_processed = parser.next::<u32>();
         let rpt_seq = parser.next::<u32>();
         let exchange_trading_session_id = parser.next::<u32>();
         let block_len = parser.next::<u16>();
         let no_md_entries = parser.next::<u8>();
-        let md_entries: Vec<OrderBookSnapshot> = (0..no_md_entries).map(|_| OrderBookSnapshot::parse(parser).0).collect();
+        let md_entries: Vec<OrderBookSnapshot> = (0..no_md_entries).map(|_| OrderBookSnapshot::parse(parser).unwrap().0).collect();
 
         let size = block_len * no_md_entries as u16 + 19;
-        (OrderBookSnapshotPacket {
+        Ok((OrderBookSnapshotPacket {
             security_id,
             last_msg_seq_num_processed,
             rpt_seq,
@@ -74,7 +74,7 @@ impl OrderBookSnapshotPacket {
             block_len,
             no_md_entries,
             md_entries,
-        }, size as u64)
+        }, size as u64))
     }
 }
 

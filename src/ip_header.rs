@@ -193,18 +193,18 @@ pub struct IpHeader {
 
 impl IpHeader {
     pub const SIZE: u8 = 16;
-    pub fn parse(parser: &mut Parser) -> IpHeader {
+    pub fn parse(parser: &mut Parser) -> Result<IpHeader, CustomErrors> {
         let destination_mac = MacAddress::from(parser.next_mac());
         let source_mac = MacAddress::from(parser.next_mac());
-        let protocol_version = ProtocolVersion::new(parser.next_be::<u16>()).unwrap();
+        let protocol_version = ProtocolVersion::new(parser.next_be::<u16>())?;
         let version_and_length = VersionAndLength(parser.next::<u8>());
-        let differentiated_services_field = DifferentialServiceCodePoint::new(parser.next::<u8>()).unwrap();
+        let differentiated_services_field = DifferentialServiceCodePoint::new(parser.next::<u8>())?;
         let total_length = parser.next_be::<u16>();
         let identification = parser.next_be::<u16>();
         let flags_and_fragment_offset = FragmentAndOffset::new(parser.next_be::<u16>());
         let ttl = parser.next::<u8>();
-        let udp_protocol = Protocol::new(parser.next::<u8>()).unwrap();
-        IpHeader {
+        let udp_protocol = Protocol::new(parser.next::<u8>())?;
+        Ok(IpHeader {
             destination_mac,
             source_mac,
             protocol_version,
@@ -215,7 +215,7 @@ impl IpHeader {
             flags_and_fragment_offset,
             ttl,
             udp_protocol,
-        }
+        })
     }
 }
 

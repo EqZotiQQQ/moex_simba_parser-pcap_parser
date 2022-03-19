@@ -55,7 +55,7 @@ pub struct GlobalPcapHeader {
 
 impl GlobalPcapHeader {
     pub fn parse(parser: &mut Parser) -> Result<GlobalPcapHeader, CustomErrors> {
-        let magic_number = Ordering::new(parser.next_be::<u32>()).unwrap();
+        let magic_number = Ordering::new(parser.next_be::<u32>())?;
         parser.set_endian(&magic_number);
 
         Ok(GlobalPcapHeader {

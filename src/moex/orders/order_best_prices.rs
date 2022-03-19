@@ -1,5 +1,5 @@
 use std::fmt::{Display, Formatter};
-use crate::Parser;
+use crate::{CustomErrors, Parser};
 
 #[allow(unused_must_use)]
 #[derive(Debug, Clone, Copy)]
@@ -30,6 +30,7 @@ pub struct OrderBestPrices {
     md_entries: Vec<BestPricesOrderPayload>,
 }
 
+
 #[allow(unused_must_use)]
 impl Display for OrderBestPrices {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
@@ -46,13 +47,13 @@ impl Display for OrderBestPrices {
 #[allow(unused_must_use)]
 impl BestPricesOrderPayload {
     pub const SIZE: u8 = 21;
-    pub fn parse(parser: &mut Parser) -> BestPricesOrderPayload {
-        BestPricesOrderPayload {
+    pub fn parse(parser: &mut Parser) -> Result<BestPricesOrderPayload, CustomErrors> {
+        Ok(BestPricesOrderPayload {
             mkt_bid_px: parser.next::<i64>(),
             mkt_offer_px: parser.next::<i64>(),
             bp_flags: parser.next::<u8>(),
             security_id: parser.next::<i32>(),
-        }
+        })
     }
 }
 
@@ -60,14 +61,22 @@ impl BestPricesOrderPayload {
 impl OrderBestPrices {
     pub const SIZE: u8 = 3;
     pub const TOTAL_SIZE: u8 = BestPricesOrderPayload::SIZE * OrderBestPrices::SIZE;
-    pub fn parse(parser: &mut Parser) -> (OrderBestPrices, u64) {
+    pub fn parse(parser: &mut Parser) -> Result<(OrderBestPrices, u64), CustomErrors> {
         let s = parser.next::<u16>();
         let n = parser.next::<u8>();
-        (OrderBestPrices {
+        let mut md_entries: Vec<BestPricesOrderPayload> = vec![];
+        for i in 0..n {
+            md_entries.push(BestPricesOrderPayload::parse(parser)?);
+        }
+        // let md_entries: Vec<BestPricesOrderPayload> =  (0..n).map(|_| {
+        //     let order = BestPricesOrderPayload::parse(parser)?;
+        //     order
+        // }).collect();
+        Ok((OrderBestPrices {
             entry_size: s,
             no_md_entry: n,
-            md_entries: (0..n).map(|_| BestPricesOrderPayload::parse(parser)).collect(),
-        }, OrderBestPrices::TOTAL_SIZE as u64)
+            md_entries
+        }, OrderBestPrices::TOTAL_SIZE as u64))
     }
 }
 

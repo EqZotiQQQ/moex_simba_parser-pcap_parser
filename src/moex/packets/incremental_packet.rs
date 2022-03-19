@@ -1,6 +1,6 @@
 use std::fmt::{Display, Formatter};
 use crate::moex::packets::simple_binary_encoding::sbe_message::SBEMessage;
-use crate::Parser;
+use crate::{CustomErrors, Parser};
 
 #[derive(Debug, Clone)]
 struct IncrementalPacketHeader {
@@ -47,19 +47,22 @@ impl Display for IncrementalPacket {
 }
 
 impl IncrementalPacket {
-    pub fn parse(parser: &mut Parser, mut size: u64) -> (IncrementalPacket, u64) {
+    pub fn parse(parser: &mut Parser, mut size: u64) -> Result<(IncrementalPacket, u64), CustomErrors> {
         let header = IncrementalPacketHeader::parse(parser);
         let mut parsed = 0;
         parsed += IncrementalPacketHeader::SIZE as u64;
         let mut sbe_messages: Vec<SBEMessage> = vec![];
         while size > parsed {
-            let (sbe_message, parsed_from_sbe) = SBEMessage::parse(parser);
+            let (sbe_message, parsed_from_sbe) = match SBEMessage::parse(parser) {
+                Ok(r) => r,
+                Err(e) => return Err(e),
+            };
             parsed += parsed_from_sbe;
             sbe_messages.push(sbe_message);
         }
-        (IncrementalPacket {
+        Ok((IncrementalPacket {
             header,
             sbe_messages,
-        }, size)
+        }, size))
     }
 }

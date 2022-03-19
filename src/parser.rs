@@ -34,14 +34,19 @@ pub struct Parser {
 
 impl Parser {
     const BUFFER_MAX_SIZE: usize = 15;
-    pub fn new(path: &str) -> Result<Parser, std::io::Error> {
-        Ok(Parser {
-            buffer: [0; Parser::BUFFER_MAX_SIZE],
-            buffer_pos: 0,
-            parsed_bytes: 0,
-            endian: Endian::Big,
-            buffered_reader: BufReader::new(File::open(Path::new(path))?),
-        })
+    pub fn new(path: &str) -> Result<Parser, CustomErrors> {
+        match File::open(Path::new(path)) {
+            Ok(f) => {
+                Ok(Parser {
+                buffer: [0; Parser::BUFFER_MAX_SIZE],
+                buffer_pos: 0,
+                parsed_bytes: 0,
+                endian: Endian::Big,
+                buffered_reader: BufReader::new(f),
+            })
+            },
+            Err(e) => return Err(CustomErrors::FailedToOpenFile)
+        }
     }
 
     pub fn set_endian(&mut self, endian: &Ordering) {
@@ -79,7 +84,7 @@ impl Parser {
         if endian == Endian::Big {
             bytes.reverse();
         }
-        let value: T = T::from_ne_bytes(bytes).unwrap();
+        let value: T = T::from_ne_bytes(bytes);
 
         self.buffer_pos += type_size;
 
@@ -91,7 +96,7 @@ impl Parser {
         for i in 0..left {
             self.buffer[i] = self.buffer[Parser::BUFFER_MAX_SIZE - left + i];
         }
-        self.buffered_reader.read_exact(&mut self.buffer[left..Parser::BUFFER_MAX_SIZE])?;
+        self.buffered_reader.read_exact(&mut self.buffer[left..Parser::BUFFER_MAX_SIZE]);
         self.parsed_bytes = 15;
         Ok(())
     }
@@ -125,7 +130,7 @@ impl Parser {
             } else {
                 let left_in_buf = Parser::BUFFER_MAX_SIZE - self.buffer_pos;
                 self.buffered_reader.seek_relative((n - left_in_buf) as i64);
-                self.buffered_reader.read_exact(&mut self.buffer)?;
+                self.buffered_reader.read_exact(&mut self.buffer);
                 self.parsed_bytes = 15;
                 self.buffer_pos = 0;
             }
@@ -135,47 +140,47 @@ impl Parser {
 }
 
 pub trait FromBytes: Sized {
-    fn from_ne_bytes(bytes: &[u8]) ->Option<Self>;
+    fn from_ne_bytes(bytes: &[u8]) ->Self;
 }
 
 impl FromBytes for u8 {
-    fn from_ne_bytes(bytes: &[u8]) -> Option<Self> {
-        bytes.try_into().map(u8::from_ne_bytes).ok()
+    fn from_ne_bytes(bytes: &[u8]) -> Self {
+        bytes.try_into().map(u8::from_ne_bytes).ok().unwrap()
     }
 }
 
 impl FromBytes for u16 {
-    fn from_ne_bytes(bytes: &[u8]) -> Option<Self> {
-        bytes.try_into().map(u16::from_ne_bytes).ok()
+    fn from_ne_bytes(bytes: &[u8]) -> Self {
+        bytes.try_into().map(u16::from_ne_bytes).ok().unwrap()
     }
 }
 
 impl FromBytes for i16 {
-    fn from_ne_bytes(bytes: &[u8]) -> Option<Self> {
-        bytes.try_into().map(i16::from_ne_bytes).ok()
+    fn from_ne_bytes(bytes: &[u8]) -> Self {
+        bytes.try_into().map(i16::from_ne_bytes).ok().unwrap()
     }
 }
 
 impl FromBytes for u32 {
-    fn from_ne_bytes(bytes: &[u8]) -> Option<Self> {
-        bytes.try_into().map(u32::from_ne_bytes).ok()
+    fn from_ne_bytes(bytes: &[u8]) -> Self {
+        bytes.try_into().map(u32::from_ne_bytes).ok().unwrap()
     }
 }
 
 impl FromBytes for i32 {
-    fn from_ne_bytes(bytes: &[u8]) -> Option<Self> {
-        bytes.try_into().map(i32::from_ne_bytes).ok()
+    fn from_ne_bytes(bytes: &[u8]) -> Self {
+        bytes.try_into().map(i32::from_ne_bytes).ok().unwrap()
     }
 }
 
 impl FromBytes for u64 {
-    fn from_ne_bytes(bytes: &[u8]) -> Option<Self> {
-        bytes.try_into().map(u64::from_ne_bytes).ok()
+    fn from_ne_bytes(bytes: &[u8]) -> Self {
+        bytes.try_into().map(u64::from_ne_bytes).ok().unwrap()
     }
 }
 
 impl FromBytes for i64 {
-    fn from_ne_bytes(bytes: &[u8]) -> Option<Self> {
-        bytes.try_into().map(i64::from_ne_bytes).ok()
+    fn from_ne_bytes(bytes: &[u8]) -> Self {
+        bytes.try_into().map(i64::from_ne_bytes).ok().unwrap()
     }
 }

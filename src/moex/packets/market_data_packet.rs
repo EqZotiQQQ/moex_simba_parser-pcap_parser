@@ -2,7 +2,7 @@ use std::fmt::{Debug, Display, Formatter};
 use crate::moex::packets::incremental_packet::IncrementalPacket;
 use crate::moex::packets::market_data_packet_header::MarketDataPacketHeader;
 use crate::moex::packets::snapshot_packet::SnapshotPacket;
-use crate::Parser;
+use crate::{CustomErrors, Parser};
 
 #[derive(Debug, Clone)]
 enum PacketType {
@@ -18,19 +18,22 @@ pub struct MarketDataPacket {
 }
 
 impl MarketDataPacket {
-    pub fn parse(parser: &mut Parser, mut length: u64) -> MarketDataPacket {
+    pub fn parse(parser: &mut Parser, mut length: u64) -> Result<MarketDataPacket, CustomErrors> {
         let header = MarketDataPacketHeader::parse(parser);
 
         length -= 16; // length of market data packet header
 
         let packet = match header.is_incremental() {
             true => {
-                let (packet, parsed) = IncrementalPacket::parse(parser, length);
+                let (packet, parsed) = match IncrementalPacket::parse(parser, length) {
+                    Ok(r) => r,
+                    Err(e) => return Err(e),
+                };
                 length -= parsed;
                 PacketType::IncrementalPacket(packet)
             },
             false => {
-                let (packet, parsed) = SnapshotPacket::parse(parser, length).unwrap();
+                let (packet, parsed) = SnapshotPacket::parse(parser, length)?;
                 length -= parsed;
                 PacketType::SnapshotPacket(packet)
             },
@@ -38,10 +41,10 @@ impl MarketDataPacket {
 
         parser.skip(length as usize);
 
-        MarketDataPacket {
+        Ok(MarketDataPacket {
             market_data_packet_header: header,
             packet
-        }
+        })
     }
 }
 

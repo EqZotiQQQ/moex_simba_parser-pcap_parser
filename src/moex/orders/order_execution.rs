@@ -1,7 +1,7 @@
 use std::fmt::{Display, Formatter};
 use crate::moex::orders::details::details::{MDEntryType, MDUpdateAction};
 use crate::moex::orders::order_update::EntryType;
-use crate::Parser;
+use crate::{CustomErrors, Parser};
 
 #[derive(Debug, Clone, Copy)]
 pub struct OrderExecution {
@@ -39,8 +39,8 @@ impl Display for OrderExecution {
 
 impl OrderExecution {
     pub const SIZE: u8 = 66;
-    pub fn parse(parser: &mut Parser) -> (OrderExecution, u64) {
-        (OrderExecution {
+    pub fn parse(parser: &mut Parser) -> Result<(OrderExecution, u64), CustomErrors> {
+        Ok((OrderExecution {
             md_entry_id: parser.next::<i64>(),
             md_entry_px: parser.next::<i64>(),
             md_entry_size: parser.next::<i64>(),
@@ -50,8 +50,8 @@ impl OrderExecution {
             md_flags: EntryType(parser.next::<i64>() as u64),
             security_id: parser.next::<i32>(),
             rpt_seq: parser.next::<u32>(),
-            md_update_action: MDUpdateAction::new(parser.next::<u8>()).unwrap(),
-            md_entry_type: MDEntryType::new(parser.next::<u8>()).unwrap(),
-        }, OrderExecution::SIZE as u64)
+            md_update_action: MDUpdateAction::new(parser.next::<u8>())?,
+            md_entry_type: MDEntryType::new(parser.next::<u8>())?,
+        }, OrderExecution::SIZE as u64))
     }
 }

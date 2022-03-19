@@ -48,28 +48,28 @@ pub struct SBEMessage {
 
 #[allow(unused_must_use)]
 impl SBEMessage {
-    pub fn parse(parser: &mut Parser) -> (SBEMessage, u64) {
+    pub fn parse(parser: &mut Parser) -> Result<(SBEMessage, u64), CustomErrors> {
         const SIZE: u32 = 42;
-        let header = SBEHeader::parse(parser).unwrap();
+        let header = SBEHeader::parse(parser)?;
         let mut parsed: u64 = SBEHeader::SIZE as u64;
         let order = match header.get_template_id() {
             MessageType::OrderBestPrices => {
-                let (order, parsed_from_order) = OrderBestPrices::parse(parser);
+                let (order, parsed_from_order) = OrderBestPrices::parse(parser)?;
                 parsed += parsed_from_order;
                 Some(OrderType::OrderBestPrices(order))
             },
             MessageType::OrderUpdate => {
-                let (order, parsed_from_order) = OrderUpdate::parse(parser);
+                let (order, parsed_from_order) = OrderUpdate::parse(parser)?;
                 parsed += parsed_from_order;
                 Some(OrderType::OrderUpdate(order))
             },
             MessageType::OrderExecution => {
-                let (order, parsed_from_order) = OrderExecution::parse(parser);
+                let (order, parsed_from_order) = OrderExecution::parse(parser)?;
                 parsed += parsed_from_order;
                 Some(OrderType::OrderExecution(order))
             },
             MessageType::OrderBookSnapshotPacket => {
-                let (order, parsed_from_order) = OrderBookSnapshotPacket::parse(parser);
+                let (order, parsed_from_order) = OrderBookSnapshotPacket::parse(parser)?;
                 parsed += parsed_from_order;
                 Some(OrderType::OrderBookSnapshotPacket(order))
             },
@@ -79,10 +79,10 @@ impl SBEMessage {
                 None
             }
         };
-        (SBEMessage {
+        Ok((SBEMessage {
             header,
             order,
-        }, parsed)
+        }, parsed))
     }
 
 }
