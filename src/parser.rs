@@ -3,7 +3,6 @@ use std::fs::File;
 use std::io::{BufReader, Read, Seek, SeekFrom};
 use std::path::Path;
 use crate::errors::CustomErrors;
-use crate::errors::CustomErrors::BadMagicNumberError;
 use crate::glob_pcap_header_parser::Ordering;
 
 #[derive(Debug, Eq, PartialEq, Copy, Clone)]
@@ -18,7 +17,7 @@ impl Endian {
         Ok(match magic {
             0xA1B2C3D4 | 0xA1B23C4D => Endian::Big,
             0xD4C3B2A1 | 0x4D3CB2A1 => Endian::Little,
-            _ => return Err(BadMagicNumberError)
+            _ => return Err(CustomErrors::BadMagicNumberError)
         })
     }
 }
@@ -70,17 +69,13 @@ impl Parser {
     #[allow(unused_must_use)]
     fn next_helper<T>(&mut self, endian: Endian) -> T
         where T: FromBytes {
-        // println!("Current internal buffer position: {}", self.buffer_pos);
         let type_size = mem::size_of::<T>();
-        let mut shifted = false;
         if type_size > self.parsed_bytes - self.buffer_pos {
-            self.fill_buffer(shifted);     // TODO: process later
-            shifted = true;
+            self.fill_buffer();     // TODO: process later
             self.buffer_pos = 0;
         }
 
         let bytes = &mut self.buffer[self.buffer_pos .. self.buffer_pos + type_size];
-        let copy: Vec<u8> = bytes.iter().map(|&i| i).collect();
         if endian == Endian::Big {
             bytes.reverse();
         }
@@ -91,20 +86,13 @@ impl Parser {
         value
     }
 
-    fn fill_buffer(&mut self, shifted: bool) -> Result<(), std::io::Error> {
+    fn fill_buffer(&mut self) -> Result<(), std::io::Error> {
         let left = self.parsed_bytes - self.buffer_pos;
-        if !shifted {
-            for i in 0..left {
-                self.buffer[i] = self.buffer[Parser::BUFFER_MAX_SIZE - left + i];
-            }
+        for i in 0..left {
+            self.buffer[i] = self.buffer[Parser::BUFFER_MAX_SIZE - left + i];
         }
-        self.buffered_reader.read_exact(&mut self.buffer[left .. Parser::BUFFER_MAX_SIZE])?;
+        self.buffered_reader.read_exact(&mut self.buffer[left..Parser::BUFFER_MAX_SIZE])?;
         self.parsed_bytes = 15;
-        // if self.parsed_bytes < Parser::BUFFER_MAX_SIZE {
-            // println!("Parsed only {} bytes", self.parsed_bytes);
-            // panic!();
-        // }
-        // println!("Parsed bytes: {}", self.parsed_bytes);
         Ok(())
     }
 
@@ -128,8 +116,6 @@ impl Parser {
         self.buffered_reader.seek(SeekFrom::Current(0)).unwrap()
     }
 
-
-    #[allow(unused_must_use)]
     pub fn skip(&mut self, n: usize) -> Result<(), std::io::Error>{
         if n == 0 {
             return Ok(())
