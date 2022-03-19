@@ -35,7 +35,7 @@ impl Display for UdpHeader {
         write!(f, "Check sum: {}\n", self.check_sum);
         write!(f, "Source ip: {}:{}\n", self.source_ip, self.source_port);
         write!(f, "Destination ip: {}:{}\n", self.dest_ip,  self.destination_port);
-        write!(f, "Length: {}\n", self.length);
+        write!(f, "Length: {} bytes\n", self.length);
         writeln!(f, "Check sum UDP: {}", self.check_sum_udp);
         writeln!(f, "== UdpHeader end ==")
     }

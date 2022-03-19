@@ -17,27 +17,26 @@ impl Display for MessageFlags {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         writeln!(f, "{}", self.0);
         if (self.0 & MessageFlags::MESSAGE_FRAGMENTATION) == MessageFlags::MESSAGE_FRAGMENTATION {
-            writeln!(f, "* Message fragmentation");
+            writeln!(f, "* 0x01 - Message fragmentation");
         } else {
-            writeln!(f, "* !Message fragmentation");
+            writeln!(f, "* !0x01 - No message fragmentation");
         }
         if (self.0 & MessageFlags::FIRST_MESSAGE) == MessageFlags::FIRST_MESSAGE {
-            writeln!(f, "* First message");
+            writeln!(f, "* 0x02 - It's a first message");
         }
         if (self.0 & MessageFlags::LAST_MESSAGE) == MessageFlags::LAST_MESSAGE {
-            writeln!(f, "* Last message");
+            writeln!(f, "* 0x04 - It's is a last message");
         }
         if (self.0 & MessageFlags::INCREMENTAL_MESSAGE) == MessageFlags::INCREMENTAL_MESSAGE {
-            writeln!(f, "* Incremental packet");
+            writeln!(f, "* 0x08 - Incremental packet");
         } else {
-            writeln!(f, "* !Incremental packet");
+            writeln!(f, "* !0x08 - Snapshot packet");
         }
         if (self.0 & MessageFlags::POS_DUP_FLAG) == MessageFlags::POS_DUP_FLAG {
-            writeln!(f, "* Pos dup flag");
+            writeln!(f, "* 0x10 - Translation full stocks using Incremental packets")
         } else {
-            writeln!(f, "* !Pos dup flag");
+            writeln!(f, "* !0x10 - Translation online messages")
         }
-        writeln!(f, "== MessageFlags end ==")
     }
 }
 
@@ -69,10 +68,10 @@ impl Display for MarketDataPacketHeader {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         writeln!(f, "== Market data packet header: ==");
         write!(f, "Message sequential number: {}\n", self.msg_seq_number);
-        write!(f, "Message size: {}\n", self.msg_size);
+        write!(f, "Message size: {} bytes\n", self.msg_size);
         write!(f, "Message flags: {}", self.msg_flags);
         writeln!(f, "Sending time: {}", self.sending_time);
-        writeln!(f, "== MarketDataPacketHeader end ==")
+        writeln!(f, "== Market data packet header end ==")
     }
 }
 

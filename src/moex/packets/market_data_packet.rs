@@ -20,9 +20,7 @@ pub struct MarketDataPacket {
 impl MarketDataPacket {
     pub fn parse(parser: &mut Parser, mut length: u64) -> MarketDataPacket {
         let header = MarketDataPacketHeader::parse(parser);
-        // println!("MarketDataPacketHeader {}", header);
 
-        println!("!!!{}", header);
         length -= 16; // length of market data packet header
 
         let packet = match header.is_incremental() {
@@ -37,8 +35,6 @@ impl MarketDataPacket {
                 PacketType::SnapshotPacket(packet)
             },
         };
-
-        eprintln!("Skip {} bytes", length);
 
         parser.skip(length as usize);
 
@@ -62,8 +58,7 @@ impl Display for PacketType {
 #[allow(unused_must_use)]
 impl Display for MarketDataPacket {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        writeln!(f, "== MarketDataPacket: ==");
-        // write!(f, "Market data packet length: {}\n", self.packet_length);
+        writeln!(f, "== MarketDataPacket ==");
         write!(f, "{}", self.market_data_packet_header);
         write!(f, "{}", self.packet);
         writeln!(f, "== MarketDataPacket end ==")

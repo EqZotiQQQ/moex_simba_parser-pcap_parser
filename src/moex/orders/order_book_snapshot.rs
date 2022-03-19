@@ -1,4 +1,5 @@
 use std::fmt::{Display, Formatter};
+use crate::moex::orders::order_update::MDEntryType;
 use crate::Parser;
 
 #[derive(Debug, Clone, Copy)]
@@ -9,20 +10,20 @@ pub struct OrderBookSnapshot {
     md_entry_size: i64,
     trade_id: i64,
     md_flags: u64,
-    md_entry_type: u8,
+    md_entry_type: MDEntryType,
 }
 
 #[allow(unused_must_use)]
 impl Display for OrderBookSnapshot {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         writeln!(f, "== OrderBookSnapshot ==");
-        writeln!(f, "md_entry_id: {}", self.md_entry_id);
-        writeln!(f, "transact_time: {}", self.transact_time);
-        writeln!(f, "md_entry_px: {}", self.md_entry_px);
-        writeln!(f, "md_entry_size: {}", self.md_entry_size);
-        writeln!(f, "trade_id: {}", self.trade_id);
-        writeln!(f, "md_flags: {}", self.md_flags);
-        writeln!(f, "md_entry_type: {}", self.md_entry_type);
+        writeln!(f, "Order ID: {}", self.md_entry_id);
+        writeln!(f, "The start time of the event processing. UNIX time in nanoseconds, according to UTC: {}", self.transact_time);
+        writeln!(f, "Order price: {}", self.md_entry_px);
+        writeln!(f, "Order volume: {}", self.md_entry_size);
+        writeln!(f, "Trade ID: {}", self.trade_id);
+        writeln!(f, "Order or trade type: {}", self.md_flags);
+        writeln!(f, "Record type: {}", self.md_entry_type);
         writeln!(f, "== OrderBookSnapshot end ==")
     }
 }
@@ -37,7 +38,7 @@ impl OrderBookSnapshot {
             md_entry_size: parser.next::<i64>(),
             trade_id: parser.next::<i64>(),
             md_flags: parser.next::<u64>(),
-            md_entry_type: parser.next::<u8>(),
+            md_entry_type: MDEntryType::new(parser.next::<u8>()).unwrap(),
         }, OrderBookSnapshot::SIZE as u64)
     }
 }
@@ -79,12 +80,11 @@ impl OrderBookSnapshotPacket {
 
 impl Display for OrderBookSnapshotPacket {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        writeln!(f, "Security ID: {}", self.security_id);
-        writeln!(f, "Sequential number of last message: {}", self.last_msg_seq_num_processed);
-        writeln!(f, "Rqt sequential: {}", self.rpt_seq);
-        writeln!(f, "Exchange trading session ID: {}", self.exchange_trading_session_id);
-        writeln!(f, "Block length: {}", self.block_len);
-        writeln!(f, "Number of entries: {}", self.no_md_entries);
+        writeln!(f, "Instrument numeric code: {}", self.security_id);
+        writeln!(f, "The 'MsgSeqNum' of the last message sent into incremental feed at the time of the current snapshot generation: {}", self.last_msg_seq_num_processed);
+        writeln!(f, "The 'RptSeq' number of the last incremental update included in the current market data snapshot for instrument.: {}", self.rpt_seq);
+        writeln!(f, "Trading session ID: {}", self.exchange_trading_session_id);
+        writeln!(f, "Number of 'MDEntry' records in the current message: {}", self.no_md_entries);
         for (i, entry) in self.md_entries.iter().enumerate() {
             writeln!(f, "Entry number {}:\n{}", i, entry);
         }

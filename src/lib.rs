@@ -23,11 +23,11 @@ pub fn parse() {
     println!("{}", global_pcap_header);
     let mut i = 1;
     loop {
-        println!("Packet number {}", i);
+        println!("\nPacket number {}\n\n", i);
 
-        if i == 6305 {
-            println!("");
-        }
+        // if i == 6305 {
+        //     println!("");
+        // }
 
         let record_header = RecordHeader::parse(&mut parser);
         println!("{}", record_header);
@@ -45,13 +45,11 @@ pub fn parse() {
         len -= UdpHeader::SIZE as u64; // udp header size
         // MOEX SIMBA PART
 
-
-        // println!("{:?}", parser);
         let market_data_packet = MarketDataPacket::parse(&mut parser, len);
         println!("{}", market_data_packet);
+        if i == 50 {
+            // break
+        }
         i+=1;
-        // if i == 6 {
-        //     break
-        // }
     }
 }

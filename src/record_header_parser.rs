@@ -31,10 +31,11 @@ impl RecordHeader {
 #[allow(unused_must_use)]
 impl Display for RecordHeader {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        writeln!(f, "== Record header: ==");
-        write!(f, "Timestamp ms: {}\n", self.ts_ms);
-        write!(f, "Timestamp ns: {}\n", self.ts_us);
-        write!(f, "Packet length: {}\n", self.pack_length);
-        writeln!(f, "Captured length: {}", self.real_length)
+        writeln!(f, "== Record header ==");
+        writeln!(f, "Timestamp ms: {}", self.ts_ms);
+        writeln!(f, "Timestamp ns: {}", self.ts_us);
+        writeln!(f, "Packet length: {} bytes", self.pack_length);
+        writeln!(f, "Captured length: {} bytes", self.real_length);
+        writeln!(f, "== Record header end ==")
     }
 }

@@ -33,7 +33,6 @@ impl SBEHeader {
 
     pub fn parse(parser: &mut Parser) -> Result<SBEHeader, CustomErrors> {
         let block_length = parser.next::<u16>();
-        println!("Block len: {}", block_length);
         let template_id = match parser.next::<u16>() {
             1 => MessageType::Heartbeat,
             2 => MessageType::SequenceReset,
@@ -98,10 +97,11 @@ impl Display for MessageType {
 #[allow(unused_must_use)]
 impl Display for SBEHeader {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        writeln!(f, "== SBE header: ==");
+        writeln!(f, "== SBE header ==");
         write!(f, "Block length: {}\n", self.block_length);
         write!(f, "Template id: {}\n", self.template_id);
         write!(f, "Schema ID: {}\n", self.schema_id);
-        writeln!(f, "Version: {}", self.version)
+        writeln!(f, "Version: {}", self.version);
+        writeln!(f, "== SBE header end ==")
     }
 }

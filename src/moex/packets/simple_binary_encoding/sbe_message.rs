@@ -29,12 +29,12 @@ enum OrderType {
 #[allow(unused_must_use)]
 impl Display for OrderType {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        writeln!(f, "Order type: ");
+        // writeln!(f, "{}", self.)
         match self {
-            OrderType::OrderUpdate(order_update) => writeln!(f, "OrderUpdate\n{}", order_update),
-            OrderType::OrderExecution(order_execution) => writeln!(f, "OrderExecution\n{}", order_execution),
-            OrderType::OrderBookSnapshotPacket(order_book_snapshot) => writeln!(f, "OrderBookSnapshot\n{}", order_book_snapshot),
-            OrderType::OrderBestPrices(order_best_prices) => writeln!(f, "OrderBestPrices\n{}", order_best_prices),
+            OrderType::OrderUpdate(order_update) => writeln!(f, "{}", order_update),
+            OrderType::OrderExecution(order_execution) => writeln!(f, "{}", order_execution),
+            OrderType::OrderBookSnapshotPacket(order_book_snapshot) => writeln!(f, "{}", order_book_snapshot),
+            OrderType::OrderBestPrices(order_best_prices) => writeln!(f, "{}", order_best_prices),
             _ => {writeln!(f, "One of other orders")}
         }
     }
@@ -79,7 +79,6 @@ impl SBEMessage {
                 None
             }
         };
-        // println!("Parsed in sbe: {}", parsed);
         (SBEMessage {
             header,
             order,
@@ -91,13 +90,12 @@ impl SBEMessage {
 #[allow(unused_must_use)]
 impl Display for SBEMessage {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        writeln!(f, "== SBE message: ==");
-        writeln!(f, "Version: {}", self.header);
+        writeln!(f, "== SBE message ==");
+        writeln!(f, "{}", self.header);
         if self.order.is_some() {
-            writeln!(f, "Order: {}", self.order.as_ref().unwrap())
-        } else {
-            writeln!(f)
+            write!(f, "{}", self.order.as_ref().unwrap());
         }
+        writeln!(f, "== SBE message end ==")
     }
 }
 

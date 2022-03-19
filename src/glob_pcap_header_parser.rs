@@ -34,10 +34,10 @@ impl Ordering {
 impl Display for Ordering {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match *self {
-            Ordering::BigEndianNanoseconds(_) => write!(f, "Big endian - Nanoseconds"),
-            Ordering::BigEndianMilliseconds(_) => write!(f, "Big endian - Milliseconds"),
-            Ordering::LittleEndianNanoseconds(_) => write!(f, "Little endian - Nanoseconds"),
-            Ordering::LittleEndMilliseconds(_) => write!(f, "Little endian - Milliseconds"),
+            Ordering::BigEndianNanoseconds(v) => write!(f, "Big endian - Nanoseconds ({:#02X})", v),
+            Ordering::BigEndianMilliseconds(v) => write!(f, "Big endian - Milliseconds ({:#02X})", v),
+            Ordering::LittleEndianNanoseconds(v) => write!(f, "Little endian - Nanoseconds ({:#02X})", v),
+            Ordering::LittleEndMilliseconds(v) => write!(f, "Little endian - Milliseconds ({:#02X})", v),
         }
     }
 }

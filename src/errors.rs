@@ -5,4 +5,7 @@ pub enum CustomErrors {
     BadMessageTypeError,
     UnsupportedProtocolVersion,
     UnsupportedProtocol,
+    UnsupportedDifferentialServiceCodePoint,
+    BadMDUpdateActionType,
+    BadMDEntryType,
 }

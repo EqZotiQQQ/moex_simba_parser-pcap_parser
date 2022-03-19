@@ -20,7 +20,7 @@ impl ProtocolVersion {
 impl Display for ProtocolVersion {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match *self {
-            ProtocolVersion::IPv4(v) => writeln!(f, "IPv4 ({})", v)
+            ProtocolVersion::IPv4(v) => write!(f, "IPv4 ({})", v)
         }
     }
 }
@@ -42,7 +42,7 @@ impl Protocol {
 impl Display for Protocol {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match *self {
-            Protocol::Udp(v) => writeln!(f, "UDP ({})", v)
+            Protocol::Udp(v) => write!(f, "UDP ({})", v)
         }
     }
 }
@@ -52,19 +52,20 @@ struct FragmentAndOffset(u16);
 #[allow(unused_must_use)]
 impl Display for FragmentAndOffset {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        match FragmentAndOffset::get_reserve_bit(self.0) {
+        writeln!(f);
+        match self.get_reserve_bit() {
             Bit::Set => writeln!(f, "* Reserve bit set"),
             Bit::NotSet => writeln!(f, "* Reserve bit unset"),
         };
-        match FragmentAndOffset::get_dont_fragment_bit(self.0) {
+        match self.get_dont_fragment_bit() {
             Bit::Set => writeln!(f, "* Don't fragment bit set"),
             Bit::NotSet => writeln!(f, "* Don't fragment bit unset"),
         };
-        match FragmentAndOffset::get_more_fragments_bit(self.0) {
+        match self.get_more_fragments_bit() {
             Bit::Set => writeln!(f, "* More fragments bit set"),
             Bit::NotSet => writeln!(f, "* More fragments bit unset"),
         };
-        writeln!(f, "* Length bit: {}", FragmentAndOffset::get_length_bit(self.0))
+        write!(f, "* Length bit: {}", self.get_length_bit())
     }
 }
 enum Bit {
@@ -79,32 +80,101 @@ impl FragmentAndOffset {
         }
     }
 
-    pub fn get_reserve_bit(byte: u16) -> Bit {
-        if ((byte >> 1) & 1) == 1 {
+    pub fn get_reserve_bit(&self) -> Bit {
+        if ((self.0 >> 1) & 1) == 1 {
             Bit::Set
         } else {
             Bit::NotSet
         }
     }
 
-    pub fn get_dont_fragment_bit(byte: u16) -> Bit {
-        if ((byte >> 2) & 1) == 1 {
+    pub fn get_dont_fragment_bit(&self) -> Bit {
+        if ((self.0 >> 2) & 1) == 1 {
             Bit::NotSet
         } else {
             Bit::Set
         }
     }
 
-    pub fn get_more_fragments_bit(byte: u16) -> Bit {
-        if ((byte >> 3) & 1) == 1 {
+    pub fn get_more_fragments_bit(&self) -> Bit {
+        if ((self.0 >> 3) & 1) == 1 {
             Bit::Set
         } else {
             Bit::NotSet
         }
     }
 
-    pub fn get_length_bit(byte: u16) -> u16 {
-        byte & 0x023C
+    pub fn get_length_bit(&self) -> u16 {
+        self.0 & 0x023C
+    }
+}
+
+struct VersionAndLength(u8);
+
+enum Version {
+    IPv4,
+    IPv6,
+}
+
+enum DifferentialServiceCodePoint {
+    CS0,
+    // CS1, Unsupported
+    // CS2,
+    // CS3,
+    // CS4,
+    // CS5,
+    // CS6,
+    // CS7,
+}
+
+impl DifferentialServiceCodePoint {
+    pub fn new(field: u8) -> Result<DifferentialServiceCodePoint, CustomErrors> {
+        Ok(match field {
+            0 => DifferentialServiceCodePoint::CS0,
+            _ => return Err(CustomErrors::UnsupportedDifferentialServiceCodePoint),
+        })
+    }
+}
+
+impl Display for DifferentialServiceCodePoint {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        match self {
+            DifferentialServiceCodePoint::CS0 => write!(f, "CS0")
+        }
+    }
+}
+
+impl Display for Version {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Version::IPv4 => write!(f, "IPv4"),
+            Version::IPv6 => write!(f, "IPv6"),
+        }
+    }
+}
+
+impl Display for VersionAndLength {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        writeln!(f, "* Version: {}", self.get_version());
+        write!(f, "* Length: {}", self.get_header_length())
+    }
+}
+
+impl VersionAndLength {
+    pub fn get_version(&self) -> Version {
+        if (self.0 & 0x04) == 0x04 {
+            Version::IPv4
+        } else {
+            Version::IPv6
+        }
+    }
+
+    pub fn get_header_length(&self) -> u8 {
+        if (self.0 & 0x05) == 0x05 {
+            20
+        } else {
+            0 // 0 isn't valid, minimum is 20 bytes in another branch. TODO fill this field correctly
+        }
     }
 }
 
@@ -112,8 +182,8 @@ pub struct IpHeader {
     destination_mac: MacAddress,
     source_mac: MacAddress,
     protocol_version: ProtocolVersion,
-    strange_field: u8,
-    differentiated_services_field: u8,
+    version_and_length: VersionAndLength,
+    differentiated_services_field: DifferentialServiceCodePoint,
     total_length: u16,
     identification: u16,
     flags_and_fragment_offset: FragmentAndOffset,
@@ -125,12 +195,10 @@ impl IpHeader {
     pub const SIZE: u8 = 16;
     pub fn parse(parser: &mut Parser) -> IpHeader {
         let destination_mac = MacAddress::from(parser.next_mac());
-        println!("destination_mac = {}", destination_mac);
         let source_mac = MacAddress::from(parser.next_mac());
-        println!("source_mac = {}", source_mac);
         let protocol_version = ProtocolVersion::new(parser.next_be::<u16>()).unwrap();
-        let strange_field = parser.next::<u8>();
-        let differentiated_services_field = parser.next::<u8>();
+        let version_and_length = VersionAndLength(parser.next::<u8>());
+        let differentiated_services_field = DifferentialServiceCodePoint::new(parser.next::<u8>()).unwrap();
         let total_length = parser.next_be::<u16>();
         let identification = parser.next_be::<u16>();
         let flags_and_fragment_offset = FragmentAndOffset::new(parser.next_be::<u16>());
@@ -140,7 +208,7 @@ impl IpHeader {
             destination_mac,
             source_mac,
             protocol_version,
-            strange_field,
+            version_and_length,
             differentiated_services_field,
             total_length,
             identification,
@@ -155,15 +223,15 @@ impl IpHeader {
 impl Display for IpHeader {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         writeln!(f, "== IP header: ==");
-        write!(f, "Destination mac: {}\n", self.destination_mac);
-        write!(f, "Source mac: {}\n", self.source_mac);
-        write!(f, "Protocol version: {}", self.protocol_version);
-        write!(f, "Strange field (TODO): {}\n", self.strange_field);
-        write!(f, "Differential services field: {}\n", self.differentiated_services_field);
-        write!(f, "Total length: {}\n", self.total_length);
-        write!(f, "Identification: {}\n", self.identification);
-        write!(f, "Flags and fragment offset:\n{}", self.flags_and_fragment_offset);
-        write!(f, "Time to live: {}\n", self.ttl);
+        writeln!(f, "Destination mac: {}", self.destination_mac);
+        writeln!(f, "Source mac: {}", self.source_mac);
+        writeln!(f, "Protocol version: {}", self.protocol_version);
+        writeln!(f, "Version and internet header length [4 bits | 4 bits]:\n{}", self.version_and_length);
+        writeln!(f, "Differential services field: {}", self.differentiated_services_field);
+        writeln!(f, "Total packet length is {} bytes. (from 20 bytes to 65535 bytes)", self.total_length);
+        writeln!(f, "Identification: {:#02X}", self.identification);
+        writeln!(f, "Flags and fragment offset: [3 bits | 13 bits]{}", self.flags_and_fragment_offset);
+        writeln!(f, "Time to live: {}", self.ttl);
         writeln!(f, "UDP protocol: {}", self.udp_protocol);
         writeln!(f, "== IpHeader end ==")
     }
