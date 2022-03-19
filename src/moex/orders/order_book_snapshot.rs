@@ -1,5 +1,5 @@
 use std::fmt::{Display, Formatter};
-use crate::moex::orders::order_update::MDEntryType;
+use crate::moex::orders::details::details::MDEntryType;
 use crate::Parser;
 
 #[derive(Debug, Clone, Copy)]

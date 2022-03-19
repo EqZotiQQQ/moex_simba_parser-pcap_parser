@@ -2,8 +2,6 @@ use std::fmt::{Display, Formatter};
 use crate::moex::packets::simple_binary_encoding::sbe_message::SBEMessage;
 use crate::Parser;
 
-
-
 #[derive(Debug, Clone)]
 struct IncrementalPacketHeader {
     transaction_time: u64,
