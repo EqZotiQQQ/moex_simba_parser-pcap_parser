@@ -1,3 +1,4 @@
+use std::fmt::Display;
 use crate::errors::CustomErrors;
 use crate::glob_pcap_header_parser::GlobalPcapHeader;
 use crate::record_header_parser::RecordHeader;
@@ -22,27 +23,35 @@ pub fn parse() -> Result<u64, CustomErrors> {
 
     println!("{}", global_pcap_header);
 
-    for i in 1..4719 {
-        println!("\nPacket number {}\n\n", i);
-
+    for i in 1..10000 {
+        // if i == 9999 {
+            println!("\nPacket number {}\n\n", i);
+        // }
         let record_header = RecordHeader::parse(&mut parser);
-        println!("{}", record_header);
-
+        // if i == 9999 {
+            println!("{}", record_header);
+        // }
         let mut len = record_header.get_packet_len() as u64;
 
         let ip_header = IpHeader::parse(&mut parser);
-        println!("{}", ip_header?);
-
+        // if  i == 9999 {
+            println!("{}", ip_header?);
+        // }
         len -= IpHeader::SIZE as u64; // ip header size
 
         let udp_header = UdpHeader::parse(&mut parser);
-        println!("{}", udp_header);
-
+        // if i == 9999 {
+            println!("{}", udp_header);
+        // }
         len -= UdpHeader::SIZE as u64; // udp header size
         // MOEX SIMBA PART
 
         let market_data_packet = MarketDataPacket::parse(&mut parser, len);
-        println!("{}", market_data_packet?);
+
+        // if i == 9999 {
+            println!("{}", market_data_packet?);
+            // println!("{:?}", parser);
+        // }
     }
     Ok(42 as u64)
 }
