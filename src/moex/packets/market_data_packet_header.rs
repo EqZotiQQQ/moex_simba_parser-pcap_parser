@@ -50,6 +50,7 @@ pub struct MarketDataPacketHeader {
 }
 
 impl MarketDataPacketHeader {
+    pub const SIZE: u8 = 16;
     pub fn parse(parser: &mut Parser) -> Result<MarketDataPacketHeader, CustomErrors> {
         Ok(MarketDataPacketHeader {
             msg_seq_number: parser.next_le::<u32>()?,
@@ -75,4 +76,3 @@ impl Display for MarketDataPacketHeader {
         writeln!(f, "== Market data packet header end ==")
     }
 }
-

@@ -1,16 +1,16 @@
 use crate::errors::CustomErrors;
-use crate::glob_pcap_header_parser::GlobalPcapHeader;
-use crate::record_header_parser::RecordHeader;
+use crate::glob_pcap_header::GlobalPcapHeader;
+use crate::record_header::RecordHeader;
 use crate::ip_header::IpHeader;
 use crate::udp_header::UdpHeader;
 use crate::parser::Parser;
 use crate::moex::packets::market_data_packet::MarketDataPacket;
 
-mod glob_pcap_header_parser;
+mod glob_pcap_header;
 mod parser;
 mod tests;
 mod errors;
-mod record_header_parser;
+mod record_header;
 mod ip_header;
 mod udp_header;
 mod moex;

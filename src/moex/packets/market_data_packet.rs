@@ -21,7 +21,7 @@ impl MarketDataPacket {
     pub fn parse(parser: &mut Parser, mut length: u64) -> Result<MarketDataPacket, CustomErrors> {
         let header = MarketDataPacketHeader::parse(parser)?;
 
-        length -= 16; // length of market data packet header
+        length -= MarketDataPacketHeader::SIZE as u64; // length of market data packet header
 
         let packet = match header.is_incremental() {
             true => {

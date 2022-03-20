@@ -3,7 +3,7 @@ use std::fs::File;
 use std::io::{BufReader, Read};
 use std::path::Path;
 use crate::errors::CustomErrors;
-use crate::glob_pcap_header_parser::Ordering;
+use crate::glob_pcap_header::Ordering;
 
 #[derive(Debug, Eq, PartialEq, Copy, Clone)]
 pub enum Endian {

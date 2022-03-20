@@ -1,6 +1,6 @@
 #[cfg(test)]
 mod tests {
-    use crate::glob_pcap_header_parser::GlobalPcapHeader;
+    use crate::glob_pcap_header::GlobalPcapHeader;
     use crate::parser::Parser;
 
     #[test]
