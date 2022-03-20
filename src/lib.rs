@@ -16,14 +16,13 @@ mod udp_header;
 mod moex;
 mod utils;
 
-pub fn parse() -> Result<u64, CustomErrors> {
-    let path = "sample.pcap";
+pub fn parse(path: &str, bounds: u64) -> Result<u64, CustomErrors> {
     let mut parser = Parser::new(&path)?;
     let global_pcap_header = GlobalPcapHeader::parse(&mut parser)?;
 
     println!("{}", global_pcap_header);
 
-    for i in 1..10 {
+    for i in 1..bounds {
         println!("\nPacket number {}\n\n", i);
 
         let record_header = RecordHeader::parse(&mut parser)?;
