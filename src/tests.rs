@@ -5,7 +5,7 @@ mod tests {
 
     #[test]
     fn parse_u8() {
-        let path = "00_to_ff.bin";
+        let path = "samples/00_to_ff.bin";
         let mut parser = Parser::new(path).unwrap();
         assert_eq!(parser.next::<u8>().unwrap(), 0);
         assert_eq!(parser.next::<u8>().unwrap(), 1);
@@ -14,7 +14,7 @@ mod tests {
 
     #[test]
     fn parse_u16() {
-        let path = "00_to_ff.bin";
+        let path = "samples/00_to_ff.bin";
         let mut parser = Parser::new(path).unwrap();
         assert_eq!(parser.next::<u16>().unwrap(), 1);
         assert_eq!(parser.next::<u16>().unwrap(), 515);
@@ -23,7 +23,7 @@ mod tests {
 
     #[test]
     fn parse_u32() {
-        let path = "00_to_ff.bin";
+        let path = "samples/00_to_ff.bin";
         let mut parser = Parser::new(path).unwrap();
         assert_eq!(parser.next::<u32>().unwrap(), 66051);
         assert_eq!(parser.next::<u32>().unwrap(), 67438087);
@@ -32,7 +32,7 @@ mod tests {
 
     #[test]
     fn parse_u64() {
-        let path = "00_to_ff.bin";
+        let path = "samples/00_to_ff.bin";
         let mut parser = Parser::new(path).unwrap();
         assert_eq!(parser.next::<u64>().unwrap(), 283686952306183);
         assert_eq!(parser.next::<u64>().unwrap(), 579005069656919567);
