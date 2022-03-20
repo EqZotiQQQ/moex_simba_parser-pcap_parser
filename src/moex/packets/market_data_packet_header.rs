@@ -1,5 +1,6 @@
 use std::fmt::{Display, Formatter};
-use crate::Parser;
+use crate::{CustomErrors, Parser};
+use crate::utils::utils::from_epoch;
 
 #[derive(Debug, Clone)]
 struct MessageFlags(u16);
@@ -49,13 +50,13 @@ pub struct MarketDataPacketHeader {
 }
 
 impl MarketDataPacketHeader {
-    pub fn parse(parser: &mut Parser) -> MarketDataPacketHeader {
-        MarketDataPacketHeader {
-            msg_seq_number: parser.next_le::<u32>(),
-            msg_size: parser.next_le::<u16>(),
-            msg_flags: MessageFlags(parser.next_le::<u16>()),
-            sending_time: parser.next_le::<u64>(),
-        }
+    pub fn parse(parser: &mut Parser) -> Result<MarketDataPacketHeader, CustomErrors> {
+        Ok(MarketDataPacketHeader {
+            msg_seq_number: parser.next_le::<u32>()?,
+            msg_size: parser.next_le::<u16>()?,
+            msg_flags: MessageFlags(parser.next_le::<u16>()?),
+            sending_time: parser.next_le::<u64>()?,
+        })
     }
 
     pub fn is_incremental(&self) -> bool {
@@ -70,7 +71,7 @@ impl Display for MarketDataPacketHeader {
         write!(f, "Message sequential number: {}\n", self.msg_seq_number);
         write!(f, "Message size: {} bytes\n", self.msg_size);
         write!(f, "Message flags: {}", self.msg_flags);
-        writeln!(f, "Sending time: {}", self.sending_time);
+        writeln!(f, "Sending time: {}", from_epoch(self.sending_time as i64));
         writeln!(f, "== Market data packet header end ==")
     }
 }

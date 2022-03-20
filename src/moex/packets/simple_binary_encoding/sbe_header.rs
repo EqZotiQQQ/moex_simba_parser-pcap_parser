@@ -32,8 +32,8 @@ impl SBEHeader {
     pub const SIZE: u16 = 8;
 
     pub fn parse(parser: &mut Parser) -> Result<SBEHeader, CustomErrors> {
-        let block_length = parser.next::<u16>();
-        let template_id = match parser.next::<u16>() {
+        let block_length = parser.next::<u16>()?;
+        let template_id = match parser.next::<u16>()? {
             1 => MessageType::Heartbeat,
             2 => MessageType::SequenceReset,
             3 => MessageType::OrderBestPrices,
@@ -53,8 +53,8 @@ impl SBEHeader {
                 return Err(CustomErrors::BadMessageTypeError);
             }
         };
-        let schema_id = parser.next::<u16>();
-        let version = parser.next::<u16>();
+        let schema_id = parser.next::<u16>()?;
+        let version = parser.next::<u16>()?;
         Ok(SBEHeader {
             block_length,
             template_id,

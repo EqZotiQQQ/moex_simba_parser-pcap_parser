@@ -1,6 +1,7 @@
 use std::fmt::{Display, Formatter};
 use crate::moex::packets::simple_binary_encoding::sbe_message::SBEMessage;
 use crate::{CustomErrors, Parser};
+use crate::utils::utils::from_epoch;
 
 #[derive(Debug, Clone)]
 struct IncrementalPacketHeader {
@@ -12,7 +13,7 @@ struct IncrementalPacketHeader {
 impl Display for IncrementalPacketHeader {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         writeln!(f, "== Incremental packet header ==");
-        write!(f, "Transaction time: {}\n", self.transaction_time);
+        write!(f, "Transaction time: {}\n", from_epoch(self.transaction_time as i64));
         writeln!(f, "Exchange trading session ID: {}", self.exchange_trading_session_id);
         writeln!(f, "== Incremental packet header end ==")
     }
@@ -20,11 +21,11 @@ impl Display for IncrementalPacketHeader {
 
 impl IncrementalPacketHeader {
     pub const SIZE: u8 = 12;
-    fn parse(parser: &mut Parser) -> IncrementalPacketHeader {
-        IncrementalPacketHeader {
-            transaction_time: parser.next::<u64>(),
-            exchange_trading_session_id: parser.next::<u32>(),
-        }
+    fn parse(parser: &mut Parser) -> Result<IncrementalPacketHeader, CustomErrors> {
+        Ok(IncrementalPacketHeader {
+            transaction_time: parser.next::<u64>()?,
+            exchange_trading_session_id: parser.next::<u32>()?,
+        })
     }
 }
 
@@ -48,7 +49,7 @@ impl Display for IncrementalPacket {
 
 impl IncrementalPacket {
     pub fn parse(parser: &mut Parser, size: u64) -> Result<(IncrementalPacket, u64), CustomErrors> {
-        let header = IncrementalPacketHeader::parse(parser);
+        let header = IncrementalPacketHeader::parse(parser)?;
         let mut parsed = 0;
         parsed += IncrementalPacketHeader::SIZE as u64;
         let mut sbe_messages: Vec<SBEMessage> = vec![];

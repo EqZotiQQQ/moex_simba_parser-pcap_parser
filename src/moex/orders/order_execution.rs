@@ -49,17 +49,17 @@ impl OrderExecution {
     pub const SIZE: u8 = 66;
     pub fn parse(parser: &mut Parser) -> Result<(OrderExecution, u64), CustomErrors> {
         Ok((OrderExecution {
-            md_entry_id: parser.next::<i64>(),
-            md_entry_px: parser.next::<i64>(),
-            md_entry_size: parser.next::<i64>(),
-            last_px: parser.next::<i64>(),
-            last_qty: parser.next::<i64>(),
-            trade_id: parser.next::<i64>(),
-            md_flags: EntryType(parser.next::<i64>() as u64),
-            security_id: parser.next::<i32>(),
-            rpt_seq: parser.next::<u32>(),
-            md_update_action: MDUpdateAction::new(parser.next::<u8>())?,
-            md_entry_type: MDEntryType::new(parser.next::<u8>())?,
+            md_entry_id: parser.next::<i64>()?,
+            md_entry_px: parser.next::<i64>()?,
+            md_entry_size: parser.next::<i64>()?,
+            last_px: parser.next::<i64>()?,
+            last_qty: parser.next::<i64>()?,
+            trade_id: parser.next::<i64>()?,
+            md_flags: EntryType(parser.next::<i64>()? as u64),
+            security_id: parser.next::<i32>()?,
+            rpt_seq: parser.next::<u32>()?,
+            md_update_action: MDUpdateAction::new(parser.next::<u8>()?)?,
+            md_entry_type: MDEntryType::new(parser.next::<u8>()?)?,
         }, OrderExecution::SIZE as u64))
     }
 }

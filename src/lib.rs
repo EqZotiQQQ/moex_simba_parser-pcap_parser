@@ -14,6 +14,7 @@ mod record_header_parser;
 mod ip_header;
 mod udp_header;
 mod moex;
+mod utils;
 
 pub fn parse() -> Result<u64, CustomErrors> {
     let path = "sample.pcap";
@@ -22,21 +23,21 @@ pub fn parse() -> Result<u64, CustomErrors> {
 
     println!("{}", global_pcap_header);
 
-    for i in 1..100000 {
+    for i in 1..10 {
         println!("\nPacket number {}\n\n", i);
 
-        let record_header = RecordHeader::parse(&mut parser);
+        let record_header = RecordHeader::parse(&mut parser)?;
 
         println!("{}", record_header);
 
         let mut len = record_header.get_packet_len() as u64;
 
-        let ip_header = IpHeader::parse(&mut parser);
+        let ip_header = IpHeader::parse(&mut parser)?;
 
-        println!("{}", ip_header?);
+        println!("{}", ip_header);
         len -= IpHeader::SIZE as u64; // ip header size
 
-        let udp_header = UdpHeader::parse(&mut parser);
+        let udp_header = UdpHeader::parse(&mut parser)?;
 
         println!("{}", udp_header);
 

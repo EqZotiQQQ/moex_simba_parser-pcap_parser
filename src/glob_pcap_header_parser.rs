@@ -47,17 +47,17 @@ pub struct GlobalPcapHeader {
 
 impl GlobalPcapHeader {
     pub fn parse(parser: &mut Parser) -> Result<GlobalPcapHeader, CustomErrors> {
-        let magic_number = Ordering::new(parser.next_be::<u32>())?;
+        let magic_number = Ordering::new(parser.next_be::<u32>()?)?;
         parser.set_endian(&magic_number);
 
         Ok(GlobalPcapHeader {
             magic_number,
-            version_major: parser.next::<u16>(),
-            version_minor: parser.next::<u16>(),
-            time_zone: parser.next::<i32>(),
-            sig_figs: parser.next::<u32>(),
-            snap_len: parser.next::<u32>(),
-            network: parser.next::<u32>(),
+            version_major: parser.next::<u16>()?,
+            version_minor: parser.next::<u16>()?,
+            time_zone: parser.next::<i32>()?,
+            sig_figs: parser.next::<u32>()?,
+            snap_len: parser.next::<u32>()?,
+            network: parser.next::<u32>()?,
         })
     }
 }

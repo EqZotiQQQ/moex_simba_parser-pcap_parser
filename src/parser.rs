@@ -44,28 +44,29 @@ impl Parser {
         }
     }
 
-    pub fn next_le<T>(&mut self) -> T
+    pub fn next_le<T>(&mut self) -> Result<T, CustomErrors>
     where T: FromBytes {
-        self.next_helper::<T>(Endian::Little)
+        Ok(self.next_helper::<T>(Endian::Little))?
     }
 
-    pub fn next_be<T>(&mut self) -> T
+    pub fn next_be<T>(&mut self) -> Result<T, CustomErrors>
     where T: FromBytes {
-        self.next_helper::<T>(Endian::Big)
+        Ok(self.next_helper::<T>(Endian::Big))?
     }
 
-    pub fn next<T>(&mut self) -> T
+    pub fn next<T>(&mut self) -> Result<T, CustomErrors>
     where T: FromBytes {
-        self.next_helper::<T>(self.endian.clone())
+        Ok(self.next_helper::<T>(self.endian.clone())?)
     }
 
-    fn init(&mut self) {
-        self.buffered_reader.read_exact(&mut self.buffer[0..Parser::BUFFER_MAX_SIZE]);
+    fn init(&mut self) -> Result<(), CustomErrors> {
+        self.read(0, Parser::BUFFER_MAX_SIZE)?;
         self.is_init = true;
+        Ok(())
     }
 
     #[allow(unused_must_use)]
-    fn next_helper<T>(&mut self, endian: Endian) -> T
+    fn next_helper<T>(&mut self, endian: Endian) -> Result<T, CustomErrors>
         where T: FromBytes {
         let type_size = mem::size_of::<T>();
         if !self.is_init {
@@ -73,7 +74,7 @@ impl Parser {
         }
 
         if type_size > Parser::BUFFER_MAX_SIZE - self.buffer_pos {
-            self.fill_buffer();     // TODO: process later
+            self.fill_buffer()?;
             self.buffer_pos = 0;
         }
         let bytes = &mut self.buffer[self.buffer_pos .. self.buffer_pos + type_size];
@@ -84,44 +85,56 @@ impl Parser {
 
         self.buffer_pos += type_size;
 
-        value
+        Ok(value)
     }
 
-    fn fill_buffer(&mut self) -> Result<(), std::io::Error> {
+    fn fill_buffer(&mut self) -> Result<(), CustomErrors> {
         let left = Parser::BUFFER_MAX_SIZE - self.buffer_pos;
         for i in 0..left {
             self.buffer[i] = self.buffer[Parser::BUFFER_MAX_SIZE - left + i];
         }
-        self.buffered_reader.read_exact(&mut self.buffer[left..Parser::BUFFER_MAX_SIZE]);
+        self.read(left, Parser::BUFFER_MAX_SIZE)?;
         Ok(())
     }
 
-    pub fn next_mac(&mut self) -> [u8; 6] {
+    pub fn next_mac(&mut self) -> Result<[u8; 6], CustomErrors> {
         let mut mac: [u8; 6] = [0, 0, 0, 0, 0, 0];
         for i in 0..6 {
-            mac[i] = self.next::<u8>();
+            mac[i] = self.next::<u8>()?;
         }
-        mac
+        Ok(mac)
     }
 
-    pub fn next_ip_v4(&mut self) -> [u8; 4] {
+    pub fn next_ip_v4(&mut self) -> Result<[u8; 4], CustomErrors> {
         let mut mac: [u8; 4] = [0, 0, 0, 0];
         for i in 0..4 {
-            mac[i] = self.next::<u8>();
+            mac[i] = self.next::<u8>()?;
         }
-        mac
+        Ok(mac)
+    }
+
+    fn read(&mut self, begin: usize, end: usize) -> Result<(), CustomErrors> {
+        match self.buffered_reader.read_exact(&mut self.buffer[begin .. end]) {
+            Ok(_) => Ok(()),
+            Err(_) => Err(CustomErrors::ParserError),
+        }
+    }
+
+    fn seek(&mut self, n: usize) -> Result<(), CustomErrors> {
+        match self.buffered_reader.seek_relative((n) as i64) {
+            Ok(_) => Ok(()),
+            Err(_) => Err(CustomErrors::ParserError),
+        }
     }
 
     pub fn skip(&mut self, n: usize) -> Result<(), CustomErrors>{
-        if n == 0 {
-            return Ok(())
-        } else {
+        if n > 0 {
             if Parser::BUFFER_MAX_SIZE > self.buffer_pos + n {
                 self.buffer_pos += n;
             } else {
                 let left_in_buf = Parser::BUFFER_MAX_SIZE - self.buffer_pos;
-                self.buffered_reader.seek_relative((n - left_in_buf) as i64);
-                self.buffered_reader.read_exact(&mut self.buffer);
+                self.seek(n - left_in_buf)?;
+                self.read(0, Parser::BUFFER_MAX_SIZE)?;
                 self.buffer_pos = 0;
             }
         }

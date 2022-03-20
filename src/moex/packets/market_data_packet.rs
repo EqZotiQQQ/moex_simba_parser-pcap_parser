@@ -19,7 +19,7 @@ pub struct MarketDataPacket {
 
 impl MarketDataPacket {
     pub fn parse(parser: &mut Parser, mut length: u64) -> Result<MarketDataPacket, CustomErrors> {
-        let header = MarketDataPacketHeader::parse(parser);
+        let header = MarketDataPacketHeader::parse(parser)?;
 
         length -= 16; // length of market data packet header
 

@@ -12,6 +12,7 @@ pub enum CustomErrors {
     UnsupportedDifferentialServiceCodePoint,
     BadMDUpdateActionType,
     BadMDEntryType,
+    ParserError,
 }
 
 impl Display for CustomErrors {
@@ -25,6 +26,7 @@ impl Display for CustomErrors {
             CustomErrors::UnsupportedDifferentialServiceCodePoint => writeln!(f, "Unsupported differential service code point"),
             CustomErrors::BadMDUpdateActionType => writeln!(f, "Bad MDUpdate action type"),
             CustomErrors::BadMDEntryType => writeln!(f, "Bad entry type"),
+            CustomErrors::ParserError => writeln!(f, "Failed to parse binary file"),
         }
     }
 }

@@ -44,7 +44,7 @@ mod tests {
         let path = "sample.pcap";
         let mut parser = Parser::new(path)?;
         assert_eq!(parser.get_file_pos(), 0);
-        parser.skip(4000);
+        parser.skip(4000)?;
         assert_eq!(parser.get_file_pos(), 4000);
     }
 

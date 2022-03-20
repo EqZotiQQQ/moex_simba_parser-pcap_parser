@@ -1,0 +1,1032 @@
+== Global pcap header: ==
+Magic number: Little endian - Nanoseconds (0xD4C3B2A1)
+Major version: 2
+Minor version: 4
+Time zone: 0
+Sig figs: 0
+Snap len: 65535
+Network: 1
+== GlobalPcapHeader end ==
+
+
+Packet number 1
+
+
+== Record header ==
+Timestamp ms: 1636559040
+Timestamp ns: 84
+Transaction date: 1970-01-19 22:35:59.040000084
+Packet length: 120 bytes
+Captured length: 120 bytes
+== Record header end ==
+
+== IP header: ==
+Destination mac: 01:00:5E:43:14:51
+Source mac: 88:1D:FC:31:7B:41
+Protocol version: IPv4 (2048)
+Version and internet header length [4 bits | 4 bits]:
+* Version: IPv4
+* Length: 20
+Differential services field: CS0
+Total packet length is 106 bytes. (from 20 bytes to 65535 bytes)
+Identification: 0x847A
+Flags and fragment offset: [3 bits | 13 bits]
+* Reserve bit unset
+* Don't fragment bit set
+* More fragments bit unset
+* Length bit: 0
+Time to live: 31
+UDP protocol: UDP (17)
+== IpHeader end ==
+
+== UdpHeader: ==
+Check sum: 31028
+Source ip: 91.203.253.244:49005
+Destination ip: 239.195.20.81:20081
+Length: 86 bytes
+Check sum UDP: 53164
+== UdpHeader end ==
+
+== MarketDataPacket ==
+== Market data packet header: ==
+Message sequential number: 40521460
+Message size: 78 bytes
+Message flags: 9
+* 0x01 - Message fragmentation
+* 0x08 - Incremental packet
+* !0x10 - Translation online messages
+Sending time: 2021-11-10 15:44:00.000078668
+== Market data packet header end ==
+== Incremental packet ==
+== Incremental packet header ==
+Transaction time: 2021-11-10 15:44:00.000068273
+Exchange trading session ID: 6417
+== Incremental packet header end ==
+
+Message number 1/1:
+
+== SBE message ==
+== SBE header ==
+Block length: 42
+Template id: (OrderUpdate)
+Schema ID: 19780
+Version: 0
+== SBE header end ==
+
+== Order update ==
+Order ID: 1960782248575771888
+Order price: 8450000
+Order volume: 65
+Order type (bit mask):
+* 0x1 Day
+* 0x1000 End of transaction bit
+* 0x200000 The entry is the result of the order cancel
+Instrument numeric code: 2034385
+Incremental refresh sequence number: 3564015
+Incremental refresh type: Delete
+Record type: Bid
+== Order update end ==
+== SBE message end ==
+== Incremental packet end ==
+== MarketDataPacket end ==
+
+
+Packet number 2
+
+
+== Record header ==
+Timestamp ms: 1636559040
+Timestamp ns: 91
+Transaction date: 1970-01-19 22:35:59.040000091
+Packet length: 120 bytes
+Captured length: 120 bytes
+== Record header end ==
+
+== IP header: ==
+Destination mac: 01:00:5E:43:14:51
+Source mac: 88:1D:FC:31:7B:41
+Protocol version: IPv4 (2048)
+Version and internet header length [4 bits | 4 bits]:
+* Version: IPv4
+* Length: 20
+Differential services field: CS0
+Total packet length is 106 bytes. (from 20 bytes to 65535 bytes)
+Identification: 0x847B
+Flags and fragment offset: [3 bits | 13 bits]
+* Reserve bit unset
+* Don't fragment bit set
+* More fragments bit unset
+* Length bit: 0
+Time to live: 31
+UDP protocol: UDP (17)
+== IpHeader end ==
+
+== UdpHeader: ==
+Check sum: 31027
+Source ip: 91.203.253.244:49005
+Destination ip: 239.195.20.81:20081
+Length: 86 bytes
+Check sum UDP: 4995
+== UdpHeader end ==
+
+== MarketDataPacket ==
+== Market data packet header: ==
+Message sequential number: 40521461
+Message size: 78 bytes
+Message flags: 9
+* 0x01 - Message fragmentation
+* 0x08 - Incremental packet
+* !0x10 - Translation online messages
+Sending time: 2021-11-10 15:44:00.000082844
+== Market data packet header end ==
+== Incremental packet ==
+== Incremental packet header ==
+Transaction time: 2021-11-10 15:44:00.000073720
+Exchange trading session ID: 6417
+== Incremental packet header end ==
+
+Message number 1/1:
+
+== SBE message ==
+== SBE header ==
+Block length: 42
+Template id: (OrderUpdate)
+Schema ID: 19780
+Version: 0
+== SBE header end ==
+
+== Order update ==
+Order ID: 1960782248575770947
+Order price: 8452000
+Order volume: 65
+Order type (bit mask):
+* 0x1 Day
+* 0x1000 End of transaction bit
+* 0x200000 The entry is the result of the order cancel
+Instrument numeric code: 2034385
+Incremental refresh sequence number: 3564016
+Incremental refresh type: Delete
+Record type: Bid
+== Order update end ==
+== SBE message end ==
+== Incremental packet end ==
+== MarketDataPacket end ==
+
+
+Packet number 3
+
+
+== Record header ==
+Timestamp ms: 1636559040
+Timestamp ns: 98
+Transaction date: 1970-01-19 22:35:59.040000098
+Packet length: 120 bytes
+Captured length: 120 bytes
+== Record header end ==
+
+== IP header: ==
+Destination mac: 01:00:5E:43:14:51
+Source mac: 88:1D:FC:31:7B:41
+Protocol version: IPv4 (2048)
+Version and internet header length [4 bits | 4 bits]:
+* Version: IPv4
+* Length: 20
+Differential services field: CS0
+Total packet length is 106 bytes. (from 20 bytes to 65535 bytes)
+Identification: 0x847C
+Flags and fragment offset: [3 bits | 13 bits]
+* Reserve bit unset
+* Don't fragment bit set
+* More fragments bit unset
+* Length bit: 0
+Time to live: 31
+UDP protocol: UDP (17)
+== IpHeader end ==
+
+== UdpHeader: ==
+Check sum: 31026
+Source ip: 91.203.253.244:49005
+Destination ip: 239.195.20.81:20081
+Length: 86 bytes
+Check sum UDP: 45716
+== UdpHeader end ==
+
+== MarketDataPacket ==
+== Market data packet header: ==
+Message sequential number: 40521462
+Message size: 78 bytes
+Message flags: 9
+* 0x01 - Message fragmentation
+* 0x08 - Incremental packet
+* !0x10 - Translation online messages
+Sending time: 2021-11-10 15:44:00.000089591
+== Market data packet header end ==
+== Incremental packet ==
+== Incremental packet header ==
+Transaction time: 2021-11-10 15:44:00.000080528
+Exchange trading session ID: 6417
+== Incremental packet header end ==
+
+Message number 1/1:
+
+== SBE message ==
+== SBE header ==
+Block length: 42
+Template id: (OrderUpdate)
+Schema ID: 19780
+Version: 0
+== SBE header end ==
+
+== Order update ==
+Order ID: 1892946779191491056
+Order price: 7134500000
+Order volume: 4
+Order type (bit mask):
+* 0x1 Day
+* 0x1000 End of transaction bit
+* 0x200000 The entry is the result of the order cancel
+Instrument numeric code: 1727747
+Incremental refresh sequence number: 7384200
+Incremental refresh type: Delete
+Record type: Ask
+== Order update end ==
+== SBE message end ==
+== Incremental packet end ==
+== MarketDataPacket end ==
+
+
+Packet number 4
+
+
+== Record header ==
+Timestamp ms: 1636559040
+Timestamp ns: 106
+Transaction date: 1970-01-19 22:35:59.040000106
+Packet length: 120 bytes
+Captured length: 120 bytes
+== Record header end ==
+
+== IP header: ==
+Destination mac: 01:00:5E:43:14:51
+Source mac: 88:1D:FC:31:7B:41
+Protocol version: IPv4 (2048)
+Version and internet header length [4 bits | 4 bits]:
+* Version: IPv4
+* Length: 20
+Differential services field: CS0
+Total packet length is 106 bytes. (from 20 bytes to 65535 bytes)
+Identification: 0x847D
+Flags and fragment offset: [3 bits | 13 bits]
+* Reserve bit unset
+* Don't fragment bit set
+* More fragments bit unset
+* Length bit: 0
+Time to live: 31
+UDP protocol: UDP (17)
+== IpHeader end ==
+
+== UdpHeader: ==
+Check sum: 31025
+Source ip: 91.203.253.244:49005
+Destination ip: 239.195.20.81:20081
+Length: 86 bytes
+Check sum UDP: 59016
+== UdpHeader end ==
+
+== MarketDataPacket ==
+== Market data packet header: ==
+Message sequential number: 40521463
+Message size: 78 bytes
+Message flags: 9
+* 0x01 - Message fragmentation
+* 0x08 - Incremental packet
+* !0x10 - Translation online messages
+Sending time: 2021-11-10 15:44:00.000094694
+== Market data packet header end ==
+== Incremental packet ==
+== Incremental packet header ==
+Transaction time: 2021-11-10 15:44:00.000085824
+Exchange trading session ID: 6417
+== Incremental packet header end ==
+
+Message number 1/1:
+
+== SBE message ==
+== SBE header ==
+Block length: 42
+Template id: (OrderUpdate)
+Schema ID: 19780
+Version: 0
+== SBE header end ==
+
+== Order update ==
+Order ID: 1892946779191490465
+Order price: 7134100000
+Order volume: 4
+Order type (bit mask):
+* 0x1 Day
+* 0x1000 End of transaction bit
+* 0x200000 The entry is the result of the order cancel
+Instrument numeric code: 1727747
+Incremental refresh sequence number: 7384201
+Incremental refresh type: Delete
+Record type: Ask
+== Order update end ==
+== SBE message end ==
+== Incremental packet end ==
+== MarketDataPacket end ==
+
+
+Packet number 5
+
+
+== Record header ==
+Timestamp ms: 1636559040
+Timestamp ns: 111
+Transaction date: 1970-01-19 22:35:59.040000111
+Packet length: 1408 bytes
+Captured length: 1408 bytes
+== Record header end ==
+
+== IP header: ==
+Destination mac: 01:00:5E:43:14:52
+Source mac: 88:1D:FC:31:7B:41
+Protocol version: IPv4 (2048)
+Version and internet header length [4 bits | 4 bits]:
+* Version: IPv4
+* Length: 20
+Differential services field: CS0
+Total packet length is 1394 bytes. (from 20 bytes to 65535 bytes)
+Identification: 0x28DB
+Flags and fragment offset: [3 bits | 13 bits]
+* Reserve bit unset
+* Don't fragment bit set
+* More fragments bit unset
+* Length bit: 0
+Time to live: 31
+UDP protocol: UDP (17)
+== IpHeader end ==
+
+== UdpHeader: ==
+Check sum: 53194
+Source ip: 91.203.253.244:35072
+Destination ip: 239.195.20.82:20082
+Length: 1374 bytes
+Check sum UDP: 42438
+== UdpHeader end ==
+
+== MarketDataPacket ==
+== Market data packet header: ==
+Message sequential number: 1602
+Message size: 1366 bytes
+Message flags: 0
+* !0x01 - No message fragmentation
+* !0x08 - Snapshot packet
+* !0x10 - Translation online messages
+Sending time: 2021-11-10 15:44:00.000103381
+== Market data packet header end ==
+== Snapshot packet ==
+== SBE message ==
+== SBE header ==
+Block length: 16
+Template id: (OrderBookSnapshot)
+Schema ID: 19780
+Version: 0
+== SBE header end ==
+
+Instrument numeric code: 1975508
+The 'MsgSeqNum' of the last message sent into incremental feed at the time of the current snapshot generation: 40520659
+The 'RptSeq' number of the last incremental update included in the current market data snapshot for instrument.: 278875
+Trading session ID: 6417
+Number of 'MDEntry' records in the current message: 27
+Entry number 0:
+== OrderBookSnapshot ==
+Order ID: 1963034048385255439
+The start time of the event processing. UNIX time in nanoseconds, according to UTC: 1636473076131033578
+Order price: 8918700000
+Order volume: 1
+Trade ID: 0
+Order or trade type: 4097
+Record type: Bid
+== OrderBookSnapshot end ==
+
+Entry number 1:
+== OrderBookSnapshot ==
+Order ID: 1963034048385255440
+The start time of the event processing. UNIX time in nanoseconds, according to UTC: 1636473076131555660
+Order price: 8294800000
+Order volume: 1
+Trade ID: 0
+Order or trade type: 4097
+Record type: Ask
+== OrderBookSnapshot end ==
+
+Entry number 2:
+== OrderBookSnapshot ==
+Order ID: 1963034048385255445
+The start time of the event processing. UNIX time in nanoseconds, according to UTC: 1636473076134347690
+Order price: 8922700000
+Order volume: 1
+Trade ID: 0
+Order or trade type: 4097
+Record type: Bid
+== OrderBookSnapshot end ==
+
+Entry number 3:
+== OrderBookSnapshot ==
+Order ID: 1963034048385255446
+The start time of the event processing. UNIX time in nanoseconds, according to UTC: 1636473076135126749
+Order price: 8293000000
+Order volume: 1
+Trade ID: 0
+Order or trade type: 4097
+Record type: Ask
+== OrderBookSnapshot end ==
+
+Entry number 4:
+== OrderBookSnapshot ==
+Order ID: 1963034048385255452
+The start time of the event processing. UNIX time in nanoseconds, according to UTC: 1636473076136620175
+Order price: 8290600000
+Order volume: 1
+Trade ID: 0
+Order or trade type: 4097
+Record type: Ask
+== OrderBookSnapshot end ==
+
+Entry number 5:
+== OrderBookSnapshot ==
+Order ID: 1963034048385255453
+The start time of the event processing. UNIX time in nanoseconds, according to UTC: 1636473076136963877
+Order price: 8621100000
+Order volume: 1
+Trade ID: 0
+Order or trade type: 4097
+Record type: Bid
+== OrderBookSnapshot end ==
+
+Entry number 6:
+== OrderBookSnapshot ==
+Order ID: 1963034048385255458
+The start time of the event processing. UNIX time in nanoseconds, according to UTC: 1636473076138146083
+Order price: 8286400000
+Order volume: 1
+Trade ID: 0
+Order or trade type: 4097
+Record type: Ask
+== OrderBookSnapshot end ==
+
+Entry number 7:
+== OrderBookSnapshot ==
+Order ID: 1963034048385255459
+The start time of the event processing. UNIX time in nanoseconds, according to UTC: 1636473076138461218
+Order price: 8617100000
+Order volume: 1
+Trade ID: 0
+Order or trade type: 4097
+Record type: Bid
+== OrderBookSnapshot end ==
+
+Entry number 8:
+== OrderBookSnapshot ==
+Order ID: 1963034048385255460
+The start time of the event processing. UNIX time in nanoseconds, according to UTC: 1636473076138599976
+Order price: 8608500000
+Order volume: 10
+Trade ID: 0
+Order or trade type: 4097
+Record type: Bid
+== OrderBookSnapshot end ==
+
+Entry number 9:
+== OrderBookSnapshot ==
+Order ID: 1963034048385255464
+The start time of the event processing. UNIX time in nanoseconds, according to UTC: 1636473076139525589
+Order price: 8281600000
+Order volume: 1
+Trade ID: 0
+Order or trade type: 4097
+Record type: Ask
+== OrderBookSnapshot end ==
+
+Entry number 10:
+== OrderBookSnapshot ==
+Order ID: 1963034048385255465
+The start time of the event processing. UNIX time in nanoseconds, according to UTC: 1636473076139834860
+Order price: 8613100000
+Order volume: 1
+Trade ID: 0
+Order or trade type: 4097
+Record type: Bid
+== OrderBookSnapshot end ==
+
+Entry number 11:
+== OrderBookSnapshot ==
+Order ID: 1963034048385255470
+The start time of the event processing. UNIX time in nanoseconds, according to UTC: 1636473076140996983
+Order price: 8278000000
+Order volume: 1
+Trade ID: 0
+Order or trade type: 4097
+Record type: Ask
+== OrderBookSnapshot end ==
+
+Entry number 12:
+== OrderBookSnapshot ==
+Order ID: 1963034048385255471
+The start time of the event processing. UNIX time in nanoseconds, according to UTC: 1636473076141225724
+Order price: 8601900000
+Order volume: 1
+Trade ID: 0
+Order or trade type: 4097
+Record type: Bid
+== OrderBookSnapshot end ==
+
+Entry number 13:
+== OrderBookSnapshot ==
+Order ID: 1963034048385255476
+The start time of the event processing. UNIX time in nanoseconds, according to UTC: 1636473076142381724
+Order price: 8277400000
+Order volume: 1
+Trade ID: 0
+Order or trade type: 4097
+Record type: Ask
+== OrderBookSnapshot end ==
+
+Entry number 14:
+== OrderBookSnapshot ==
+Order ID: 1963034048385255477
+The start time of the event processing. UNIX time in nanoseconds, according to UTC: 1636473076142677241
+Order price: 8597900000
+Order volume: 1
+Trade ID: 0
+Order or trade type: 4097
+Record type: Bid
+== OrderBookSnapshot end ==
+
+Entry number 15:
+== OrderBookSnapshot ==
+Order ID: 1963034048385255480
+The start time of the event processing. UNIX time in nanoseconds, according to UTC: 1636473076143780762
+Order price: 8400600000
+Order volume: 1
+Trade ID: 0
+Order or trade type: 4097
+Record type: Ask
+== OrderBookSnapshot end ==
+
+Entry number 16:
+== OrderBookSnapshot ==
+Order ID: 1963034048385255482
+The start time of the event processing. UNIX time in nanoseconds, according to UTC: 1636473076144058184
+Order price: 8274400000
+Order volume: 1
+Trade ID: 0
+Order or trade type: 4097
+Record type: Ask
+== OrderBookSnapshot end ==
+
+Entry number 17:
+== OrderBookSnapshot ==
+Order ID: 1963034048385255483
+The start time of the event processing. UNIX time in nanoseconds, according to UTC: 1636473076144207892
+Order price: 8594700000
+Order volume: 1
+Trade ID: 0
+Order or trade type: 4097
+Record type: Bid
+== OrderBookSnapshot end ==
+
+Entry number 18:
+== OrderBookSnapshot ==
+Order ID: 1963034048385255488
+The start time of the event processing. UNIX time in nanoseconds, according to UTC: 1636473076145603926
+Order price: 8269600000
+Order volume: 1
+Trade ID: 0
+Order or trade type: 4097
+Record type: Ask
+== OrderBookSnapshot end ==
+
+Entry number 19:
+== OrderBookSnapshot ==
+Order ID: 1963034048385255489
+The start time of the event processing. UNIX time in nanoseconds, according to UTC: 1636473076145741372
+Order price: 8593100000
+Order volume: 1
+Trade ID: 0
+Order or trade type: 4097
+Record type: Bid
+== OrderBookSnapshot end ==
+
+Entry number 20:
+== OrderBookSnapshot ==
+Order ID: 1963034048385255494
+The start time of the event processing. UNIX time in nanoseconds, according to UTC: 1636473076147032775
+Order price: 8266000000
+Order volume: 1
+Trade ID: 0
+Order or trade type: 4097
+Record type: Ask
+== OrderBookSnapshot end ==
+
+Entry number 21:
+== OrderBookSnapshot ==
+Order ID: 1963034048385255495
+The start time of the event processing. UNIX time in nanoseconds, according to UTC: 1636473076147292986
+Order price: 8590700000
+Order volume: 1
+Trade ID: 0
+Order or trade type: 4097
+Record type: Bid
+== OrderBookSnapshot end ==
+
+Entry number 22:
+== OrderBookSnapshot ==
+Order ID: 1963034048385255500
+The start time of the event processing. UNIX time in nanoseconds, according to UTC: 1636473076148504763
+Order price: 8260000000
+Order volume: 1
+Trade ID: 0
+Order or trade type: 4097
+Record type: Ask
+== OrderBookSnapshot end ==
+
+Entry number 23:
+== OrderBookSnapshot ==
+Order ID: 1963034048385255501
+The start time of the event processing. UNIX time in nanoseconds, according to UTC: 1636473076148815434
+Order price: 8589100000
+Order volume: 1
+Trade ID: 0
+Order or trade type: 4097
+Record type: Bid
+== OrderBookSnapshot end ==
+
+Entry number 24:
+== OrderBookSnapshot ==
+Order ID: 1963034048385255506
+The start time of the event processing. UNIX time in nanoseconds, according to UTC: 1636473076149939375
+Order price: 8259400000
+Order volume: 1
+Trade ID: 0
+Order or trade type: 4097
+Record type: Ask
+== OrderBookSnapshot end ==
+
+Entry number 25:
+== OrderBookSnapshot ==
+Order ID: 1963034048385255507
+The start time of the event processing. UNIX time in nanoseconds, according to UTC: 1636473076150269217
+Order price: 8588300000
+Order volume: 1
+Trade ID: 0
+Order or trade type: 4097
+Record type: Bid
+== OrderBookSnapshot end ==
+
+Entry number 26:
+== OrderBookSnapshot ==
+Order ID: 1963034048385255512
+The start time of the event processing. UNIX time in nanoseconds, according to UTC: 1636473076151298995
+Order price: 8252200000
+Order volume: 1
+Trade ID: 0
+Order or trade type: 4097
+Record type: Ask
+== OrderBookSnapshot end ==
+
+
+
+== SBE message end ==
+== SnapshotPacket end ==
+
+== MarketDataPacket end ==
+
+
+Packet number 6
+
+
+== Record header ==
+Timestamp ms: 1636559040
+Timestamp ns: 112
+Transaction date: 1970-01-19 22:35:59.040000112
+Packet length: 120 bytes
+Captured length: 120 bytes
+== Record header end ==
+
+== IP header: ==
+Destination mac: 01:00:5E:43:14:51
+Source mac: 88:1D:FC:31:7B:41
+Protocol version: IPv4 (2048)
+Version and internet header length [4 bits | 4 bits]:
+* Version: IPv4
+* Length: 20
+Differential services field: CS0
+Total packet length is 106 bytes. (from 20 bytes to 65535 bytes)
+Identification: 0x847E
+Flags and fragment offset: [3 bits | 13 bits]
+* Reserve bit unset
+* Don't fragment bit set
+* More fragments bit unset
+* Length bit: 0
+Time to live: 31
+UDP protocol: UDP (17)
+== IpHeader end ==
+
+== UdpHeader: ==
+Check sum: 31024
+Source ip: 91.203.253.244:49005
+Destination ip: 239.195.20.81:20081
+Length: 86 bytes
+Check sum UDP: 677
+== UdpHeader end ==
+
+== MarketDataPacket ==
+== Market data packet header: ==
+Message sequential number: 40521464
+Message size: 78 bytes
+Message flags: 9
+* 0x01 - Message fragmentation
+* 0x08 - Incremental packet
+* !0x10 - Translation online messages
+Sending time: 2021-11-10 15:44:00.000100146
+== Market data packet header end ==
+== Incremental packet ==
+== Incremental packet header ==
+Transaction time: 2021-11-10 15:44:00.000091830
+Exchange trading session ID: 6417
+== Incremental packet header end ==
+
+Message number 1/1:
+
+== SBE message ==
+== SBE header ==
+Block length: 42
+Template id: (OrderUpdate)
+Schema ID: 19780
+Version: 0
+== SBE header end ==
+
+== Order update ==
+Order ID: 1892946779191496089
+Order price: 7134600000
+Order volume: 4
+Order type (bit mask):
+* 0x1 Day
+* 0x1000 End of transaction bit
+* 0x200000 The entry is the result of the order cancel
+Instrument numeric code: 1727747
+Incremental refresh sequence number: 7384202
+Incremental refresh type: Delete
+Record type: Ask
+== Order update end ==
+== SBE message end ==
+== Incremental packet end ==
+== MarketDataPacket end ==
+
+
+Packet number 7
+
+
+== Record header ==
+Timestamp ms: 1636559040
+Timestamp ns: 124
+Transaction date: 1970-01-19 22:35:59.040000124
+Packet length: 120 bytes
+Captured length: 120 bytes
+== Record header end ==
+
+== IP header: ==
+Destination mac: 01:00:5E:43:14:51
+Source mac: 88:1D:FC:31:7B:41
+Protocol version: IPv4 (2048)
+Version and internet header length [4 bits | 4 bits]:
+* Version: IPv4
+* Length: 20
+Differential services field: CS0
+Total packet length is 106 bytes. (from 20 bytes to 65535 bytes)
+Identification: 0x847F
+Flags and fragment offset: [3 bits | 13 bits]
+* Reserve bit unset
+* Don't fragment bit set
+* More fragments bit unset
+* Length bit: 0
+Time to live: 31
+UDP protocol: UDP (17)
+== IpHeader end ==
+
+== UdpHeader: ==
+Check sum: 31023
+Source ip: 91.203.253.244:49005
+Destination ip: 239.195.20.81:20081
+Length: 86 bytes
+Check sum UDP: 25524
+== UdpHeader end ==
+
+== MarketDataPacket ==
+== Market data packet header: ==
+Message sequential number: 40521465
+Message size: 78 bytes
+Message flags: 9
+* 0x01 - Message fragmentation
+* 0x08 - Incremental packet
+* !0x10 - Translation online messages
+Sending time: 2021-11-10 15:44:00.000108283
+== Market data packet header end ==
+== Incremental packet ==
+== Incremental packet header ==
+Transaction time: 2021-11-10 15:44:00.000098337
+Exchange trading session ID: 6417
+== Incremental packet header end ==
+
+Message number 1/1:
+
+== SBE message ==
+== SBE header ==
+Block length: 42
+Template id: (OrderUpdate)
+Schema ID: 19780
+Version: 0
+== SBE header end ==
+
+== Order update ==
+Order ID: 1925034926535347621
+Order price: 18504000000
+Order volume: 3
+Order type (bit mask):
+* 0x1 Day
+* 0x1000 End of transaction bit
+* 0x200000 The entry is the result of the order cancel
+Instrument numeric code: 1727750
+Incremental refresh sequence number: 4732736
+Incremental refresh type: Delete
+Record type: Ask
+== Order update end ==
+== SBE message end ==
+== Incremental packet end ==
+== MarketDataPacket end ==
+
+
+Packet number 8
+
+
+== Record header ==
+Timestamp ms: 1636559040
+Timestamp ns: 131
+Transaction date: 1970-01-19 22:35:59.040000131
+Packet length: 120 bytes
+Captured length: 120 bytes
+== Record header end ==
+
+== IP header: ==
+Destination mac: 01:00:5E:43:14:51
+Source mac: 88:1D:FC:31:7B:41
+Protocol version: IPv4 (2048)
+Version and internet header length [4 bits | 4 bits]:
+* Version: IPv4
+* Length: 20
+Differential services field: CS0
+Total packet length is 106 bytes. (from 20 bytes to 65535 bytes)
+Identification: 0x8480
+Flags and fragment offset: [3 bits | 13 bits]
+* Reserve bit unset
+* Don't fragment bit set
+* More fragments bit unset
+* Length bit: 0
+Time to live: 31
+UDP protocol: UDP (17)
+== IpHeader end ==
+
+== UdpHeader: ==
+Check sum: 31022
+Source ip: 91.203.253.244:49005
+Destination ip: 239.195.20.81:20081
+Length: 86 bytes
+Check sum UDP: 18501
+== UdpHeader end ==
+
+== MarketDataPacket ==
+== Market data packet header: ==
+Message sequential number: 40521466
+Message size: 78 bytes
+Message flags: 9
+* 0x01 - Message fragmentation
+* 0x08 - Incremental packet
+* !0x10 - Translation online messages
+Sending time: 2021-11-10 15:44:00.000117078
+== Market data packet header end ==
+== Incremental packet ==
+== Incremental packet header ==
+Transaction time: 2021-11-10 15:44:00.000108201
+Exchange trading session ID: 6417
+== Incremental packet header end ==
+
+Message number 1/1:
+
+== SBE message ==
+== SBE header ==
+Block length: 42
+Template id: (OrderUpdate)
+Schema ID: 19780
+Version: 0
+== SBE header end ==
+
+== Order update ==
+Order ID: 1960782248575781580
+Order price: 8454000
+Order volume: 65
+Order type (bit mask):
+* 0x1 Day
+* 0x1000 End of transaction bit
+* 0x200000 The entry is the result of the order cancel
+Instrument numeric code: 2034385
+Incremental refresh sequence number: 3564017
+Incremental refresh type: Delete
+Record type: Bid
+== Order update end ==
+== SBE message end ==
+== Incremental packet end ==
+== MarketDataPacket end ==
+
+
+Packet number 9
+
+
+== Record header ==
+Timestamp ms: 1636559040
+Timestamp ns: 138
+Transaction date: 1970-01-19 22:35:59.040000138
+Packet length: 120 bytes
+Captured length: 120 bytes
+== Record header end ==
+
+== IP header: ==
+Destination mac: 01:00:5E:43:14:51
+Source mac: 88:1D:FC:31:7B:41
+Protocol version: IPv4 (2048)
+Version and internet header length [4 bits | 4 bits]:
+* Version: IPv4
+* Length: 20
+Differential services field: CS0
+Total packet length is 106 bytes. (from 20 bytes to 65535 bytes)
+Identification: 0x8481
+Flags and fragment offset: [3 bits | 13 bits]
+* Reserve bit unset
+* Don't fragment bit set
+* More fragments bit unset
+* Length bit: 0
+Time to live: 31
+UDP protocol: UDP (17)
+== IpHeader end ==
+
+== UdpHeader: ==
+Check sum: 31021
+Source ip: 91.203.253.244:49005
+Destination ip: 239.195.20.81:20081
+Length: 86 bytes
+Check sum UDP: 21161
+== UdpHeader end ==
+
+== MarketDataPacket ==
+== Market data packet header: ==
+Message sequential number: 40521467
+Message size: 78 bytes
+Message flags: 9
+* 0x01 - Message fragmentation
+* 0x08 - Incremental packet
+* !0x10 - Translation online messages
+Sending time: 2021-11-10 15:44:00.000131003
+== Market data packet header end ==
+== Incremental packet ==
+== Incremental packet header ==
+Transaction time: 2021-11-10 15:44:00.000120909
+Exchange trading session ID: 6417
+== Incremental packet header end ==
+
+Message number 1/1:
+
+== SBE message ==
+== SBE header ==
+Block length: 42
+Template id: (OrderUpdate)
+Schema ID: 19780
+Version: 0
+== SBE header end ==
+
+== Order update ==
+Order ID: 1951775049317193156
+Order price: 2512000
+Order volume: 2
+Order type (bit mask):
+* 0x1 Day
+* 0x1000 End of transaction bit
+* 0x200000 The entry is the result of the order cancel
+Instrument numeric code: 2037983
+Incremental refresh sequence number: 453098
+Incremental refresh type: Delete
+Record type: Ask
+== Order update end ==
+== SBE message end ==
+== Incremental packet end ==
+== MarketDataPacket end ==

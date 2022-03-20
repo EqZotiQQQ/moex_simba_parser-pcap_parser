@@ -49,13 +49,13 @@ impl OrderBookSnapshot {
     pub const SIZE: u8 = 49;
     pub fn parse(parser: &mut Parser) -> Result<(OrderBookSnapshot, u64), CustomErrors> {
         Ok((OrderBookSnapshot {
-            md_entry_id: parser.next::<i64>(),
-            transact_time: parser.next::<u64>(),
-            md_entry_px: parser.next::<i64>(),
-            md_entry_size: parser.next::<i64>(),
-            trade_id: parser.next::<i64>(),
-            md_flags: parser.next::<u64>(),
-            md_entry_type: MDEntryType::new(parser.next::<u8>())?,
+            md_entry_id: parser.next::<i64>()?,
+            transact_time: parser.next::<u64>()?,
+            md_entry_px: parser.next::<i64>()?,
+            md_entry_size: parser.next::<i64>()?,
+            trade_id: parser.next::<i64>()?,
+            md_flags: parser.next::<u64>()?,
+            md_entry_type: MDEntryType::new(parser.next::<u8>()?)?,
         }, OrderBookSnapshot::SIZE as u64))
     }
 }
@@ -74,13 +74,18 @@ pub struct OrderBookSnapshotPacket {
 
 impl OrderBookSnapshotPacket {
     pub fn parse(parser: &mut Parser) -> Result<(OrderBookSnapshotPacket, u64), CustomErrors> {
-        let security_id = parser.next::<i32>();
-        let last_msg_seq_num_processed = parser.next::<u32>();
-        let rpt_seq = parser.next::<u32>();
-        let exchange_trading_session_id = parser.next::<u32>();
-        let block_len = parser.next::<u16>();
-        let no_md_entries = parser.next::<u8>();
-        let md_entries: Vec<OrderBookSnapshot> = (0..no_md_entries).map(|_| OrderBookSnapshot::parse(parser).unwrap().0).collect();
+        let security_id = parser.next::<i32>()?;
+        let last_msg_seq_num_processed = parser.next::<u32>()?;
+        let rpt_seq = parser.next::<u32>()?;
+        let exchange_trading_session_id = parser.next::<u32>()?;
+        let block_len = parser.next::<u16>()?;
+        let no_md_entries = parser.next::<u8>()?;
+
+        let mut md_entries: Vec<OrderBookSnapshot> = vec![];
+         for _ in 0..no_md_entries {
+             md_entries.push(OrderBookSnapshot::parse(parser)?.0);
+             // map(|_| OrderBookSnapshot::parse(parser).unwrap().0).collect();
+         }
 
         let size = block_len * no_md_entries as u16 + 19;
         Ok((OrderBookSnapshotPacket {

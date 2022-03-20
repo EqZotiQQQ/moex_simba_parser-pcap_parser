@@ -106,14 +106,14 @@ impl OrderUpdate  {
     pub const SIZE: u8 = 42;
     pub fn parse(parser: &mut Parser) -> Result<(OrderUpdate, u64), CustomErrors>  {
         Ok((OrderUpdate  {
-            md_entry_id: parser.next::<i64>(),
-            md_entry_px: parser.next::<i64>(),
-            md_entry_size: parser.next::<i64>(),
-            md_flags: EntryType(parser.next::<u64>()),
-            security_id: parser.next::<i32>(),
-            rpt_seq: parser.next::<u32>(),
-            md_update_action: MDUpdateAction::new(parser.next::<u8>())?,
-            md_entry_type: MDEntryType::new(parser.next::<u8>())?,
+            md_entry_id: parser.next::<i64>()?,
+            md_entry_px: parser.next::<i64>()?,
+            md_entry_size: parser.next::<i64>()?,
+            md_flags: EntryType(parser.next::<u64>()?),
+            security_id: parser.next::<i32>()?,
+            rpt_seq: parser.next::<u32>()?,
+            md_update_action: MDUpdateAction::new(parser.next::<u8>()?)?,
+            md_entry_type: MDEntryType::new(parser.next::<u8>()?)?,
         }, OrderUpdate::SIZE as u64))
     }
 }

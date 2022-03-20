@@ -1,6 +1,6 @@
 use std::fmt::{Display, Formatter};
 use std::net::Ipv4Addr;
-use crate::Parser;
+use crate::{CustomErrors, Parser};
 
 
 pub struct UdpHeader {
@@ -15,16 +15,16 @@ pub struct UdpHeader {
 
 impl UdpHeader {
     pub const SIZE: u16 = 26;
-    pub fn parse(parser: &mut Parser) -> UdpHeader {
-        UdpHeader {
-            check_sum: parser.next_be::<u16>(),
-            source_ip: Ipv4Addr::from(parser.next_ip_v4()),
-            dest_ip: Ipv4Addr::from(parser.next_ip_v4()),
-            source_port: parser.next_be::<u16>(),
-            destination_port: parser.next_be::<u16>(),
-            length: parser.next_be::<u16>(),
-            check_sum_udp: parser.next_be::<u16>(),
-        }
+    pub fn parse(parser: &mut Parser) -> Result<UdpHeader, CustomErrors> {
+        Ok(UdpHeader {
+            check_sum: parser.next_be::<u16>()?,
+            source_ip: Ipv4Addr::from(parser.next_ip_v4()?),
+            dest_ip: Ipv4Addr::from(parser.next_ip_v4()?),
+            source_port: parser.next_be::<u16>()?,
+            destination_port: parser.next_be::<u16>()?,
+            length: parser.next_be::<u16>()?,
+            check_sum_udp: parser.next_be::<u16>()?,
+        })
     }
 }
 
